@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Usuarios — Mapa Bodega AP</title>
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="usuarios">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Administración de usuarios</h1>
+        </div>
+    </header>
+    <main>
+        <p id="mensaje" role="status" aria-live="polite"></p>
+        <section>
+            <h2>Crear usuario</h2>
+            <form id="crear"><label>Usuario<input name="usuario" required minlength="3" maxlength="50"
+                        pattern="[A-Za-z0-9._-]+" autocomplete="off"></label><label>Nombre<input name="nombre" required
+                        maxlength="120"></label><label>Contraseña inicial<input name="password" type="password"
+                        minlength="12" required autocomplete="new-password"></label><label>Rol<select name="rol"
+                        id="nuevoRol">
+                        <option value="BODEGA">Bodega</option>
+                        <option value="SUPERVISOR">Supervisor</option>
+                        <option value="TECNICO">Técnico</option>
+                        <option value="CONSULTA">Consulta</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select></label><label>Ficha de personal (opcional)<select name="personalId" id="nuevoPersonal">
+                        <option value="">Sin vincular</option>
+                    </select></label><button type="submit">Crear cuenta</button></form>
+        </section>
+        <section>
+            <h2>Usuarios registrados</h2>
+            <div class="scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Personal vinculado</th>
+                            <th>Estado</th>
+                            <th>Guardar cambios</th>
+                            <th>Restablecer contraseña</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuarios"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script defer src="js/usuarios.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

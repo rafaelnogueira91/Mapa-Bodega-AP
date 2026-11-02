@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');const path=require('node:path');
+const ruta=fs.readFileSync(path.join(__dirname,'../routes/series-proyectos.js'),'utf8');
+const ui=fs.readFileSync(path.join(__dirname,'../public/js/series-proyectos.js'),'utf8');
+assert.match(ruta,/api\/series-proyectos\/pendientes-exportacion/);
+assert.match(ruta,/WHERE e\.fecha_devolucion IS NULL AND e\.id>\? ORDER BY e\.id ASC LIMIT 1000/);
+assert.match(ruta,/Number\.isSafeInteger\(cursor\)/);
+assert.match(ruta,/siguienteCursor:registros\.length===1000/);
+assert.match(ui,/for\(;;\)/);
+assert.match(ui,/pendientes-exportacion\?cursor=/);
+assert.match(ui,/filtrarPorAlerta\(filtrarEntregas\(registros/);
+assert.match(ui,/finally\{boton\.disabled=false;\}/);
+console.log('Exportación paginada: 8 comprobaciones correctas');

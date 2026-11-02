@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Bodegas — Mapa Bodega AP</title>
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="bodegas" class="ap-page ap-bodegas">
+    <header>
+        <div>
+            <h1>Bodegas</h1>
+            <p>Mapa, ubicaciones y estructuras físicas</p>
+        </div>
+    </header>
+    <main>
+        <section class="buscador-mapa">
+            <h2>Buscar producto</h2>
+            <div class="contenedor-busqueda">
+                <input id="buscarProducto" aria-label="Código de producto o número de serie" autocomplete="off"
+                    enterkeyhint="search" placeholder="Código de producto o número de serie" type="search" />
+                <button id="botonBuscarProducto" type="button">
+                    Buscar
+                </button>
+                <button id="botonEscanear" type="button">
+                    📷 Escanear
+                </button>
+            </div>
+            <p id="resultadoBusqueda" role="status" aria-live="polite"></p>
+        </section>
+        <section class="selector-bodegas">
+            <h2>Bodegas</h2>
+            <div class="contenedor-bodegas">
+                <button class="boton-bodega" data-bodega="1">
+                    Bodega 1
+                </button>
+                <button class="boton-bodega" data-bodega="2">
+                    Bodega 2
+                </button>
+                <button class="boton-bodega" data-bodega="3">
+                    Bodega 3
+                </button>
+            </div>
+        </section>
+        <section class="mapa-bodega">
+            <h2 id="tituloBodegaMapa">
+                Bodega 1
+            </h2>
+            <div class="leyenda">
+                <span>
+                    🟢 Disponible
+                </span>
+                <span>
+                    🔵 Ocupada
+                </span>
+                <span>
+                    🟠 Por completar
+                </span>
+            </div>
+            <div class="pasillos" id="contenedorPasillos">
+                <div class="pasillo">
+                    <h3>Pasillo 1</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion disponible">
+                            B1-P01-U01
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P01-U02
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P01-U03
+                        </div>
+                    </div>
+                </div>
+                <div class="pasillo">
+                    <h3>Pasillo 2</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion ocupada">
+                            B1-P02-U01
+                        </div>
+                        <div class="ubicacion disponible">
+                            B1-P02-U02
+                        </div>
+                        <div class="ubicacion parcial">
+                            B1-P02-U03
+                        </div>
+                    </div>
+                </div>
+                <div class="pasillo">
+                    <h3>Pasillo 3</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion disponible">
+                            B1-P03-U01
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P03-U02
+                        </div>
+                        <div class="ubicacion disponible">
+                            B1-P03-U03
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <details class="gestion-bodega" id="gestionEspacios">
+            <summary>Agregar espacios a la bodega</summary>
+            <div id="panelEstructura">
+                <div class="panel-v6">
+                    <h2 class="titulo-espacio">Configurar estructura</h2>
+                    <p class="aviso-v6">Cada estructura genera posiciones reales en el inventario existente. No elimina
+                        ubicaciones anteriores.</p>
+                    <form id="formEstructura">
+                        <div class="configuracion-visual">
+                            <div class="formulario-estructura">
+                                <div class="grid-v6">
+                                    <div><label for="nombre">Nombre</label><input id="nombre" maxlength="60"
+                                            placeholder="RACK-A01" required="" /></div>
+                                    <div><label for="tipo">Tipo</label><select id="tipo">
+                                            <option value="RACK">Rack para pallets</option>
+                                            <option value="ESTANTERIA">Estantería</option>
+                                            <option value="PISO">Zona de piso</option>
+                                        </select></div>
+                                    <div><label for="estructura-bodega">Bodega (número)</label><input
+                                            id="estructura-bodega" min="1" required="" type="number" value="1" /></div>
+                                    <div><label for="estructura-pasillo">Pasillo (número)</label><input
+                                            id="estructura-pasillo" min="1" required="" type="number" value="1" /></div>
+                                    <div><label for="modulos">Módulos / columnas</label><input id="modulos" max="30"
+                                            min="1" required="" type="number" value="3" /></div>
+                                    <div><label for="niveles">Niveles / filas</label><input id="niveles" max="15"
+                                            min="1" required="" type="number" value="3" /></div>
+                                    <div><label for="posiciones">Posiciones por módulo</label><input id="posiciones"
+                                            max="20" min="1" required="" type="number" value="2" /></div>
+                                    <div><label for="capacidad">Capacidad por posición (kg, opcional)</label><input
+                                            id="capacidad" min="0" placeholder="Ej. 1000" step="0.01" type="number" />
+                                    </div>
+                                </div>
+                            </div>
+                            <aside class="dibujo-estructura" aria-label="Dibujo de la estructura">
+                                <h3>Vista visual de la estructura</h3>
+                                <p>Se actualiza antes de guardar</p>
+                                <div id="dibujoRack" class="dibujo-rack" role="img"
+                                    aria-label="Distribución de niveles y módulos"></div>
+                            </aside>
+                        </div>
+                        <section aria-label="Vista previa de posiciones" class="vista-previa-espacio">
+                            <div class="cabecera-previa">
+                                <h3>Vista previa de posiciones</h3>
+                                <p aria-live="polite" class="aviso-v6" id="total"></p>
+                            </div>
+                            <div class="rack-v6" id="preview"></div>
+                        </section><button class="boton-v6" id="guardar">Crear estructura y posiciones</button>
+                    </form>
+                    <p id="mensaje" role="status"></p>
+                    <section aria-live="polite" class="resultado-estructura" hidden="" id="resultadoEstructura">
+                        <h3>Posiciones creadas</h3>
+                        <p>Estos son los códigos definitivos de las ubicaciones. Puedes consultarlos también en el mapa.
+                        </p>
+                        <div class="codigos-creados" id="codigosCreados"></div><button class="boton-v6"
+                            id="copiarCodigos" type="button">Copiar códigos</button> <button class="boton-v6"
+                            disabled="" id="descargarCodigos" type="button">Exportar etiquetas CSV</button><span
+                            id="estadoCopia" role="status"></span>
+                    </section>
+                </div>
+            </div>
+        </details>
+        <details class="gestion-bodega">
+            <summary>Consultar ubicaciones creadas</summary>
+            <section class="formulario-producto ap-inline-1">
+                <h2>Ubicaciones creadas</h2>
+                <div aria-label="Filtrar ubicaciones" class="filtros-ubicaciones" role="search">
+                    <label for="filtroUbicacion">Buscar código o pasillo</label>
+                    <input autocomplete="off" id="filtroUbicacion" placeholder="Ej. B1-P01-U01" type="search" />
+                    <label for="filtroBodega">Bodega</label>
+                    <select id="filtroBodega">
+                        <option value="">Todas</option>
+                    </select>
+                    <label for="filtroEstado">Estado</label>
+                    <select id="filtroEstado">
+                        <option value="">Todos</option>
+                    </select>
+                    <button id="limpiarFiltrosUbicacion" type="button">Limpiar filtros</button>
+                    <button id="imprimirEtiquetasUbicacion" type="button">Imprimir etiquetas filtradas</button>
+                    <button id="escanearQrUbicacion" type="button">Escanear QR de ubicación</button>
+                </div>
+                <p aria-live="polite" id="contadorUbicaciones"></p>
+                <div id="listaUbicaciones">
+                    <p>
+                        Todavía no se han cargado ubicaciones.
+                    </p>
+                </div>
+            </section>
+        </details>
+        <details class="gestion-bodega">
+            <summary>Estructuras registradas</summary>
+            <div class="panel-v6">
+                <h2>Estructuras registradas</h2>
+                <div id="listado">Cargando...</div>
+            </div>
+        </details>
+        <details class="gestion-bodega" id="administrarBodega">
+            <summary>Administrar bodegas y ubicaciones</summary>
+            <div class="ap-ext-bodegas-01">
+                <section>
+                    <h3>Crear ubicación manualmente</h3>
+                    <p>Indica el código que quieres asignar, por ejemplo B1-P01-U01.</p>
+                    <form id="formCodigoManual" class="ap-ext-bodegas-02"><input id="codigoManual"
+                            placeholder="B1-P01-U01" required maxlength="25" aria-label="Código manual"
+                            class="ap-inline-2"><button type="submit">Crear ubicación</button></form>
+                </section>
+                <section>
+                    <h3>Editar código de ubicación</h3>
+                    <p>Solo se pueden renombrar ubicaciones sin stock ni movimientos.</p>
+                    <form id="formEditarCodigo" class="ap-ext-bodegas-03"><select id="ubicacionEditar" required
+                            class="ap-inline-3">
+                            <option value="">Selecciona una ubicación</option>
+                        </select><input id="codigoNuevo" required maxlength="25" placeholder="Nuevo código"
+                            class="ap-inline-4"><button type="submit">Guardar cambio</button></form>
+                </section>
+                <section>
+                    <h3>Eliminar ubicación</h3>
+                    <form id="eliminarUbicacionForm" class="ap-ext-bodegas-04"><select id="ubicacionEliminar" required
+                            class="ap-inline-5">
+                            <option value="">Selecciona una ubicación</option>
+                        </select><button type="submit">Eliminar ubicación</button></form>
+                </section>
+                <section>
+                    <h3>Eliminar bodega</h3>
+                    <p>Se eliminará únicamente la bodega seleccionada si no tiene stock, movimientos ni proyectos
+                        asociados.</p>
+                    <form id="eliminarBodegaForm" class="ap-ext-bodegas-05"><select id="bodegaEliminar" required
+                            class="ap-inline-6">
+                            <option value="">Selecciona una bodega</option>
+                        </select><button type="submit">Eliminar bodega</button></form>
+                </section>
+            </div>
+        </details>
+    </main>
+    <!-- =========================
+         MODAL UBICACIÓN
+    ========================= -->
+    <div class="modal-ubicacion" id="modalUbicacion">
+        <div class="contenido-modal">
+            <button class="cerrar-modal" id="cerrarModal" type="button" aria-label="Cerrar detalle de ubicación">
+                ×
+            </button>
+            <h2 id="tituloUbicacion">
+                Ubicación
+            </h2>
+            <div class="detalle-producto">
+                <div class="foto-producto">
+                    <span>📦</span>
+                </div>
+                <div class="info-producto">
+                    <p>
+                        <strong>Producto:</strong>
+                        Sin producto asignado
+                    </p>
+                    <p>
+                        <strong>Código:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>Tipo de control:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>N° Serie:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>Cantidad:</strong>
+                        -
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div aria-labelledby="tituloQrUbicacion" aria-modal="true" class="modal-ubicacion ap-ext-bodegas-06"
+        id="modalQrUbicacion" role="dialog">
+        <div class="contenido-modal">
+            <button aria-label="Cerrar lector QR" class="cerrar-modal" id="cerrarQrUbicacion" type="button">×</button>
+            <h2 id="tituloQrUbicacion">Consultar ubicación por QR</h2>
+            <p>Escanea una etiqueta o ingresa el código de ubicación manualmente.</p>
+            <div id="lectorQrUbicacion"></div>
+            <form id="formQrUbicacion">
+                <label for="codigoQrUbicacion">Código de ubicación</label>
+                <input autocomplete="off" id="codigoQrUbicacion" placeholder="Ej. B1-P01-U01" required="" type="text" />
+                <button type="submit">Consultar ubicación</button>
+            </form>
+            <p aria-live="polite" id="estadoQrUbicacion" role="status"></p>
+        </div>
+    </div>
+    <!-- =========================
+         MODAL ESCÁNER
+    ========================= -->
+    <div class="modal-ubicacion" id="modalEscaner">
+        <div class="contenido-modal">
+            <button aria-label="Cerrar escáner" class="cerrar-modal" id="cerrarEscaner" type="button">
+                ×
+            </button>
+            <h2>
+                Escanear código
+            </h2>
+            <p>
+                Apunta la cámara al código del producto.
+            </p>
+            <div id="lectorCodigo" class="ap-inline-7"></div>
+            <p id="mensajeEscaner" role="status" aria-live="polite" class="ap-inline-8"></p>
+        </div>
+    </div>
+    <!-- Librería para escanear códigos -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
+    </script>
+    <script src="js/mapa.js"></script>
+    <script src="js/ubicaciones.js"></script>
+    <script src="js/estructuras-v6.js"></script>
+    <script src="js/bodegas-integradas.js"></script>
+    <script src="js/qr-local.js"></script>
+    <script src="js/etiquetas-ubicaciones.js"></script>
+    <script src="js/lector-qr-ubicaciones.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/ubicaciones-manual.js?v=20261018"></script>
+    <script defer src="/js/eliminar-espacios.js?v=20261018"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

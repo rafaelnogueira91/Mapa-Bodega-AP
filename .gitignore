@@ -1,0 +1,12 @@
+node_modules/
+backups/
+database/*.db
+database/*.db-*
+uploads/
+.env
+.env.*
+!.env.example
+*.partial
+.DS_Store
+__pycache__/
+*.pyc

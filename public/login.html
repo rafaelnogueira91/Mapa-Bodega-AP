@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Mapa Bodega AP · Acceso</title>
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="login">
+    <form class="card" id="login">
+        <h1>Mapa Bodega AP</h1>
+        <p>Acceso al sistema de bodega</p><label>Usuario</label><input name="usuario" autocomplete="username"
+            required><label>Contraseña</label><input name="password" type="password" autocomplete="current-password"
+            required><button>Iniciar sesión</button>
+        <p id="error" role="alert"></p>
+    </form>
+    <script>document.getElementById('login').onsubmit = async e => { e.preventDefault(); const data = Object.fromEntries(new FormData(e.target)); try { const r = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); const j = await r.json(); if (!r.ok) throw Error(j.error); location.href = '/'; } catch (x) { document.getElementById('error').textContent = x.message } }</script>
+</body>
+
+</html>

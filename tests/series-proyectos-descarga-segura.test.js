@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../public/js/series-proyectos.js'),'utf8');
+const handler=source.slice(source.indexOf("$('#exportarPendientesCSV').addEventListener"),source.indexOf("$('#mover').addEventListener"));
+assert.ok(handler.includes('const filtradas=filtrarPorAlerta(filtrarEntregas(registros'));
+assert.ok(handler.includes('crearCSVDePendientes(filtradas,fechaReporte)'));
+assert.ok(handler.includes('enlace.click()'));
+assert.ok(handler.includes('finally { enlace.remove(); }'));
+assert.ok(handler.includes('setTimeout(()=>URL.revokeObjectURL(url),1000)'));
+assert.ok(handler.includes('finally{boton.disabled=false;}'));
+console.log('Descarga CSV: filtros, liberación diferida y limpieza comprobados');

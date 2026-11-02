@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Proyectos - Mapa Bodega AP</title>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="proyectos" class="ap-page ap-proyectos">
+    <header>
+        <div>
+            <h1>Gestión de Proyectos</h1>
+            <p>Proyectos compartiendo bodegas, con identificación independiente</p>
+        </div>
+    </header>
+    <main class="proyectos-wrap">
+        <section class="ap-pro-project-hero" aria-label="Resumen de proyectos">
+            <div><span class="ap-pro-eyebrow">ADMINISTRACIÓN DE PROYECTOS</span><h2>Control de proyectos y asignaciones</h2><p>Consulta el estado de tus proyectos y gestiona responsables y bodegas desde un solo lugar.</p></div>
+            <a class="ap-pro-project-action" href="#form">+ Nuevo proyecto</a>
+        </section>
+        <section class="ap-pro-project-stats" aria-label="Indicadores de proyectos" aria-live="polite">
+            <article><span>Total de proyectos</span><strong id="proyectosTotal">—</strong></article>
+            <article><span>Proyectos activos</span><strong id="proyectosActivos">—</strong></article>
+            <article><span>Con bodega asignada</span><strong id="proyectosAsignados">—</strong></article>
+            <article><span>Sin bodega asignada</span><strong id="proyectosSinAsignar">—</strong></article>
+        </section>
+        <nav aria-label="Secciones de proyectos" class="ap-subnav"><a href="#form">Nuevo proyecto</a><a
+                href="#listaProyectos">Proyectos registrados</a></nav>
+        <div class="proyectos-grid">
+            <section class="proyectos-card">
+                <h2 id="titulo">Nuevo proyecto</h2>
+                <form id="form"><label for="codigo">Código *</label><input id="codigo" maxlength="40"
+                        placeholder="PR-001" required="" /><label for="nombre">Nombre *</label><input id="nombre"
+                        maxlength="150" placeholder="Proyecto de instalación" required="" /><label
+                        for="cliente">Cliente</label><input id="cliente" maxlength="150" /><label
+                        for="responsable">Responsable</label><input id="responsable" maxlength="150" /><label
+                        for="descripcion">Descripción</label><textarea id="descripcion" rows="3"></textarea><label
+                        for="estado">Estado</label><select id="estado">
+                        <option>ACTIVO</option>
+                        <option>INACTIVO</option>
+                    </select>
+                    <fieldset id="asignacionProyecto" class="ap-inline-1">
+                        <legend>Asignación del proyecto</legend><label for="supervisorAsignado">Supervisor a
+                            cargo</label><select id="supervisorAsignado">
+                            <option value="">Sin asignar</option>
+                        </select><label for="bodegaAsignada">Bodega vinculada</label><select id="bodegaAsignada">
+                            <option value="">Sin asignar</option>
+                        </select><small>La asignación se guarda al guardar el proyecto. Solo Administración puede
+                            modificarla.</small>
+                    </fieldset><button id="guardar" type="submit">Guardar proyecto</button> <button class="sec"
+                        id="cancelar" type="button">Limpiar</button>
+                </form>
+                <p id="mensaje" role="status"></p>
+            </section>
+            <section class="proyectos-card">
+                <h2 id="listaProyectos">Proyectos registrados</h2><label class="ap-pro-project-search-label" for="buscar">Buscar proyectos</label><input id="buscar"
+                    placeholder="Buscar por código, nombre, cliente o responsable" />
+                <div class="proyectos-scroll">
+                    <table class="proyectos-table"><caption class="ap-pro-sr-only">Listado de proyectos registrados</caption>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Proyecto</th>
+                                <th>Cliente</th>
+                                <th>Estado</th>
+                                <th>Bodega</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista"></tbody>
+                    </table>
+                </div>
+                <p id="conteo"></p>
+                <p class="ap-inline-2">Para reservar existencias o transferir materiales entre proyectos, utiliza el módulo <a href="stock-proyectos.html">Stock por proyecto</a>.</p>
+            </section>
+        </div>
+    </main>
+    <script src="js/proyectos.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="js/validacion-movil.js?v=1"></script>
+    <script defer src="js/avisos-movil.js?v=1"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

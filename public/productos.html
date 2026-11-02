@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Productos</title>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="productos" class="ap-page ap-productos">
+  <header>
+    <div class="ap-header-identidad">
+      <h1>Productos</h1>
+      <p>Registro de materiales de bodega</p>
+    </div>
+
+  </header>
+  <main>
+    <div class="ap-productos-hero">
+      <div><span class="ap-productos-eyebrow">CONTROL DE EXISTENCIAS</span><h2>Inventario de materiales</h2><p>Consulta existencias, detecta faltantes y registra productos desde un mismo lugar.</p></div>
+      <button type="button" id="apAbrirRegistroProducto" class="ap-productos-primario">+ Registrar producto</button>
+    </div>
+    <div class="ap-productos-tabs" role="tablist" aria-label="Secciones del inventario">
+      <button type="button" id="apTabConsultar" role="tab" aria-selected="true" aria-controls="apPanelConsultar">Consultar inventario</button>
+      <button type="button" id="apTabRegistrar" role="tab" aria-selected="false" aria-controls="apPanelRegistrar">Registrar producto</button>
+    </div>
+    <div id="apPanelConsultar" role="tabpanel" aria-labelledby="apTabConsultar">
+    <section class="ap-panel ap-inventario-consulta ap-inventario-buscador" aria-labelledby="tituloConsultaInventario">
+      <div class="ap-inventario-cabecera">
+        <div>
+          <h2 id="tituloConsultaInventario">Buscar productos</h2>
+          <p>Encuentra materiales por código, nombre o descripción.</p>
+        </div>
+        <button type="button" id="actualizarConsultaProductos" class="ap-inventario-actualizar">Actualizar
+          lista</button>
+      </div>
+      <label for="buscarConsultaProductos">Buscar por código, nombre o descripción</label>
+      <input id="buscarConsultaProductos" type="search" placeholder="Escribe para buscar un producto..."
+        autocomplete="off" />
+      <label for="filtroVencimientoProductos">Filtrar por vencimiento</label>
+      <select id="filtroVencimientoProductos" aria-label="Filtrar productos por vencimiento">
+        <option value="todos">Todos los productos</option>
+        <option value="vencidos">Vencidos</option>
+        <option value="proximos">Próximos a vencer</option>
+        <option value="vigentes">Con vencimiento vigente</option>
+        <option value="sin-fecha">Sin fecha de vencimiento</option>
+      </select>
+      <div class="ap-inventario-controles-avanzados" role="group" aria-label="Filtrar y ordenar listado de productos">
+        <label for="filtroStockProductos">Disponibilidad
+          <select id="filtroStockProductos">
+            <option value="todos">Todo el inventario</option>
+            <option value="disponibles">Con stock libre</option>
+            <option value="sin-stock">Sin stock libre</option>
+            <option value="bajo-minimo">Stock bajo o igual al mínimo</option>
+          </select>
+        </label>
+        <label for="ordenProductos">Ordenar por
+          <select id="ordenProductos">
+            <option value="nombre">Nombre (A–Z)</option>
+            <option value="nombre-desc">Nombre (Z–A)</option>
+            <option value="codigo">Código (A–Z)</option>
+            <option value="stock-asc">Menor stock libre</option>
+            <option value="stock-desc">Mayor stock libre</option>
+          </select>
+        </label>
+        <button type="button" id="limpiarFiltrosProductos">Limpiar filtros</button>
+        <button type="button" id="exportarProductosFiltrados"
+          title="Descargar solo los productos visibles según los filtros">Exportar resultados CSV</button>
+      </div>
+      <div class="ap-resumen-existencias" id="resumenExistencias" aria-label="Resumen de existencias">
+        <button type="button" class="ap-kpi" data-filtro-stock="todos"><span>Productos registrados</span><strong
+            id="kpiTotalProductos">—</strong><small>Ver todos</small></button>
+        <button type="button" class="ap-kpi" data-filtro-stock="disponibles"><span>Con stock libre</span><strong
+            id="kpiConStock">—</strong><small>Ver disponibles</small></button>
+        <button type="button" class="ap-kpi" data-filtro-stock="sin-stock"><span>Sin stock libre</span><strong
+            id="kpiSinStock">—</strong><small>Ver sin stock</small></button>
+        <button type="button" class="ap-kpi" data-filtro-stock="bajo-minimo"><span>Reposición necesaria</span><strong
+            id="kpiReposicion">—</strong><small>Ver bajo mínimo</small></button>
+      </div>
+      <p id="estadoResumenExistencias" class="ap-inventario-nota" role="status" aria-live="polite">Cargando
+        indicadores...</p>
+      <p id="estadoFiltrosProductos" class="ap-inventario-contador" role="status" aria-live="polite"></p>
+      <div id="panelAlertasVencimientoProductos" class="ap-alertas-resumen" role="group"
+        aria-label="Accesos rápidos a alertas de vencimiento"></div>
+      <p id="resumenVencimientoProductos" role="status" aria-live="polite"></p>
+    </section>
+    <section class="ap-panel ap-inventario-consulta ap-inventario-resultados" aria-labelledby="tituloListaInventario">
+      <h2 id="tituloListaInventario">Productos registrados</h2>
+      <p id="estadoConsultaProductos" role="status" aria-live="polite">Cargando productos...</p>
+      <div id="listaConsultaProductos" class="ap-inventario-lista" aria-live="polite"></div>
+    </section>
+    </div>
+    <div id="apPanelRegistrar" role="tabpanel" aria-labelledby="apTabRegistrar" hidden>
+    <section class="formulario-producto ap-panel">
+      <h2>Registrar producto</h2>
+      <form id="formProducto">
+        <div class="campo-formulario">
+          <label for="codigo">
+            Código
+          </label>
+          <input id="codigo" name="codigo" required="" type="text" />
+        </div>
+        <div class="campo-formulario">
+          <label for="nombre">
+            Nombre del producto
+          </label>
+          <input id="nombre" name="nombre" required="" type="text" />
+        </div>
+        <div class="campo-formulario">
+          <label for="descripcion">
+            Descripción
+          </label>
+          <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+        </div>
+        <div class="campo-formulario">
+          <label for="tipoControl">
+            Tipo de control
+          </label>
+          <select id="tipoControl" name="tipoControl" required="">
+            <option value="">
+              Selecciona una opción
+            </option>
+            <option value="SERIE">
+              Por número de serie
+            </option>
+            <option value="CANTIDAD">
+              Por cantidad
+            </option>
+          </select>
+        </div>
+        <div class="campo-formulario campo-dinamico" id="campoSerie">
+          <label for="numeroSerie">
+            Número de serie
+          </label>
+          <input id="numeroSerie" name="numeroSerie" type="text" />
+        </div>
+        <div class="campo-formulario campo-dinamico" id="campoCantidad">
+          <label for="cantidad">
+            Cantidad
+          </label>
+          <input id="cantidad" min="0" name="cantidad" type="number" />
+        </div>
+        <div class="campo-formulario">
+          <label for="ubicacion">
+            Ubicación
+          </label>
+          <select id="ubicacion" name="ubicacion" required="">
+            <option value="">
+              Selecciona una ubicación
+            </option>
+            <option value="B1-P01-U01">
+              B1-P01-U01
+            </option>
+            <option value="B1-P01-U02">
+              B1-P01-U02
+            </option>
+            <option value="B1-P01-U03">
+              B1-P01-U03
+            </option>
+            <option value="B1-P02-U01">
+              B1-P02-U01
+            </option>
+            <option value="B1-P02-U02">
+              B1-P02-U02
+            </option>
+            <option value="B1-P02-U03">
+              B1-P02-U03
+            </option>
+          </select>
+        </div>
+        <div class="campo-formulario ap-foto-producto">
+          <label>Foto del producto</label>
+          <div class="ap-foto-acciones">
+            <button class="ap-foto-boton" id="abrirCamaraProducto" type="button">📷 Tomar foto</button>
+            <button class="ap-foto-boton ap-foto-secundario" id="abrirGaleriaProducto" type="button">🖼️ Elegir de
+              galería</button>
+          </div>
+          <input accept="image/*" aria-label="Capturar fotografía con la cámara" capture="environment"
+            class="ap-foto-oculto" id="capturaProducto" type="file" />
+          <input accept="image/*" aria-label="Seleccionar fotografía de galería" class="ap-foto-oculto"
+            id="galeriaProducto" type="file" />
+          <input accept="image/*" aria-label="Fotografía seleccionada" class="ap-foto-oculto" id="foto" name="foto"
+            tabindex="-1" type="file" />
+          <div class="ap-foto-vista" hidden="" id="vistaFotoProducto">
+            <img alt="Vista previa de la fotografía del producto" id="imagenFotoProducto" />
+            <span id="nombreFotoProducto"></span>
+            <button class="ap-foto-quitar" id="quitarFotoProducto" type="button">Quitar foto</button>
+          </div>
+          <p class="ap-foto-ayuda" id="mensajeFotoProducto" role="status">Puedes tomar una foto desde el celular o
+            elegir una imagen guardada.</p>
+        </div>
+        <button class="boton-guardar" type="submit">
+          Guardar producto
+        </button>
+      </form>
+    </section>
+
+  </main>
+  
+  <script defer src="js/productos-interfaz.js?v=1"></script>
+  <script src="js/productos.js"></script>
+  <script defer src="js/productos-consulta.js?v=3"></script>
+  <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+  <script defer src="js/validacion-movil.js?v=1"></script>
+  <script defer src="js/avisos-movil.js?v=1"></script>
+  <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Operaciones integrales · Bodega AP</title>
+    
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="operaciones-integrales" class="mov-layout">
+    <nav aria-label="Secciones de movimientos" class="mov-nav"><a class="mov-link" href="movimientos.html">Entradas y
+            salidas</a><a class="mov-link active" href="operaciones-integrales.html">Traslados y devoluciones</a></nav>
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Operaciones integrales</h1>
+            <p>Traslados · devoluciones · asignaciones · historial</p>
+        </div>
+    </header>
+    <main>
+        <nav aria-label="Accesos rápidos" class="mov-shortcuts"><a href="#trasladar">Traslados</a><a
+                href="#devolver">Devoluciones</a><a href="#asignaciones">Asignaciones</a><a
+                href="#historial">Historial</a></nav>
+        <section class="panel" id="trasladar">
+            <h2>Trasladar productos entre ubicaciones</h2>
+            <form id="transfer">
+                <div class="fields">
+                    <div><label>Producto</label><select data-products="" name="productoId" required=""></select></div>
+                    <div><label>Origen</label><select data-locations="" name="origenId" required=""></select></div>
+                    <div><label>Destino</label><select data-locations="" name="destinoId" required=""></select></div>
+                    <div><label>Cantidad</label><input min="1" name="cantidad" type="number" value="1" /></div>
+                    <div><label>Número de serie</label><select name="numeroSerie">
+                            <option value="">No aplica</option>
+                        </select></div>
+                </div>
+                <p class="hint" id="transfer-stock"></p><button>Confirmar traslado</button>
+                <p aria-live="polite" class="message"></p>
+            </form>
+        </section>
+        <section class="panel" id="devolver">
+            <h2>Registrar devolución desde terreno</h2>
+            <form id="return">
+                <div class="fields">
+                    <div><label>Trabajador</label><select data-workers="" name="personalId" required=""></select></div>
+                    <div><label>Producto</label><select data-products="" name="productoId" required=""></select></div>
+                    <div><label>Ubicación de devolución</label><select data-locations="" name="ubicacionId"
+                            required=""></select></div>
+                    <div><label>Cantidad</label><input min="1" name="cantidad" type="number" value="1" /></div>
+                    <div><label>Número de serie</label><select name="numeroSerie">
+                            <option value="">No aplica</option>
+                        </select></div>
+                </div>
+                <p class="hint">Para series, se muestran las que figuran entregadas al trabajador seleccionado.</p>
+                <button>Confirmar devolución</button>
+                <p aria-live="polite" class="message"></p>
+            </form>
+        </section>
+        <section class="panel" id="asignaciones">
+            <h2>Herramientas y materiales asignados</h2>
+            <div class="fields">
+                <div><label>Trabajador</label><select data-workers="" id="worker-summary"></select></div>
+                <div class="ap-inline-1"><button id="show-summary">Consultar asignaciones</button></div>
+            </div>
+            <div class="tablewrap" id="summary"></div>
+        </section>
+        <section class="panel" id="historial">
+            <h2>Historial de movimientos</h2>
+            <div class="fields">
+                <div><label>Filtrar por trabajador</label><select data-workers="" id="worker-history"></select></div>
+                <div class="ap-inline-2"><button id="export-csv">Exportar CSV</button></div>
+            </div>
+            <div class="tablewrap" id="history"></div>
+        </section>
+    </main>
+    <script src="js/operaciones-integrales.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ubicaciones</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="ubicaciones">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Ubicaciones</h1>
+            <p>Administración de bodegas, pasillos y ubicaciones</p>
+        </div>
+    </header>
+    <main>
+        <section class="ap-edicion-manual ap-inline-1">
+            <h2 class="ap-inline-2">Crear ubicación con código propio</h2>
+            <p>Escribe el código exacto que quieras utilizar, por ejemplo B1-P01-U01.</p>
+            <form id="formCodigoManual" class="ap-ext-ubicaciones-01">
+                <input id="codigoManual" aria-label="Código de ubicación" placeholder="B1-P01-U01" required
+                    maxlength="25" / class="ap-inline-3">
+                <button type="submit">Crear ubicación</button>
+            </form>
+            <h2 class="ap-inline-4">Editar código de ubicación</h2>
+            <p>Por seguridad, solo se permite editar ubicaciones sin stock ni movimientos históricos.</p>
+            <form id="formEditarCodigo" class="ap-ext-ubicaciones-02">
+                <select id="ubicacionEditar" required aria-label="Ubicación a editar" class="ap-inline-5">
+                    <option value="">Selecciona una ubicación</option>
+                </select>
+                <input id="codigoNuevo" aria-label="Nuevo código" placeholder="Nuevo código: B1-P01-U02" required
+                    maxlength="25" / class="ap-inline-6">
+                <button type="submit">Guardar cambio</button>
+            </form>
+        </section>
+
+        <div class="barra-superior">
+
+        </div>
+        <section class="formulario-producto">
+            <h2>Nueva ubicación</h2>
+            <form id="formUbicacion">
+                <div class="campo-formulario">
+                    <label for="bodega">
+                        Bodega
+                    </label>
+                    <input id="bodega" min="1" name="bodega" required="" type="number" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="pasillo">
+                        Pasillo
+                    </label>
+                    <input id="pasillo" min="1" name="pasillo" required="" type="number" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="cantidadUbicaciones">
+                        Cantidad de ubicaciones a crear
+                    </label>
+                    <input id="cantidadUbicaciones" min="1" name="cantidadUbicaciones" required="" type="number"
+                        value="1" />
+                </div>
+                <button class="boton-guardar" type="submit">
+                    Crear ubicaciones
+                </button>
+            </form>
+        </section>
+        <section class="formulario-producto ap-inline-7">
+            <h2>Ubicaciones creadas</h2>
+            <div id="listaUbicaciones">
+                <p>
+                    Todavía no se han cargado ubicaciones.
+                </p>
+            </div>
+        </section>
+        <section class="ap-inline-8">
+            <h2 class="ap-inline-9">Eliminar espacios</h2>
+            <p>Solo se pueden eliminar espacios sin productos, stock, movimientos ni proyectos asociados. Cada
+                eliminación afecta únicamente la selección.</p>
+            <form id="eliminarUbicacionForm" class="ap-ext-ubicaciones-03">
+                <select id="ubicacionEliminar" aria-label="Ubicación a eliminar" required class="ap-inline-10">
+                    <option value="">Selecciona una ubicación</option>
+                </select>
+                <button type="submit">Eliminar ubicación</button>
+            </form>
+            <form id="eliminarBodegaForm" class="ap-ext-ubicaciones-04">
+                <select id="bodegaEliminar" aria-label="Bodega a eliminar" required class="ap-inline-11">
+                    <option value="">Selecciona una bodega</option>
+                </select>
+                <button type="submit">Eliminar bodega</button>
+            </form>
+        </section>
+    </main>
+    <script src="js/ubicaciones.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/ubicaciones-manual.js?v=1"></script>
+    <script defer src="/js/eliminar-espacios.js?v=1"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Mapa Bodega AP · Reportes V5</title>
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="reportes-v5" class="ap-reportes">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>📊 Reportes e indicadores · V5</h1>
+            <p>Consulta operativa y exportación de inventario</p>
+        </div>
+    </header>
+    <main>
+        <nav aria-label="Secciones de reportes" class="ap-report-nav"><a href="#cards">Indicadores</a><a
+                href="#conciliacionPanel">Conciliación</a><a href="#alertasPanel">Alertas</a><a
+                href="#solicitudesPanel">Solicitudes</a></nav>
+        <div class="ap-pro-report-tools"><div><span class="ap-pro-eyebrow">ANÁLISIS OPERACIONAL</span><h2>Resumen de bodega</h2><p>Información consultada desde el servidor. Verifica las diferencias antes de regularizar el inventario.</p></div><div class="ap-pro-refresh"><button type="button" id="actualizarReportes">Actualizar datos</button><small id="fechaActualizacion" role="status" aria-live="polite">Pendiente de actualización</small></div></div>
+        <p id="error" role="alert"></p>
+        <section class="cards" id="cards"></section>
+        <section class="panel" id="conciliacionPanel">
+            <h2>Conciliación de inventario por ubicación</h2>
+            <p>Existencias físicas, asignaciones a proyectos y saldo libre. Los saldos inconsistentes requieren
+                revisión.</p><div class="ap-pro-filters"><label for="filtro">Filtrar resultados: </label><select id="filtro">
+                <option value="TODOS">Todos</option>
+                <option value="INCONSISTENTE">Solo inconsistencias</option>
+                <option value="OK">Solo consistentes</option>
+            </select> <label for="buscar">Buscar: </label><input aria-label="Buscar inventario" id="buscar"
+                placeholder="Código, producto o ubicación" type="search" /><button id="exportar">Exportar conciliación
+                CSV</button></div>
+            <div aria-live="polite" id="conteo"></div>
+            <div id="inventario"></div>
+        </section>
+        <section class="panel" id="alertasPanel">
+            <h2>Alertas de consistencia</h2>
+            <div id="alertas"></div>
+        </section>
+        <section class="panel" id="solicitudesPanel">
+            <h2>Solicitudes por estado</h2>
+            <div id="solicitudes"></div>
+        </section>
+        <p><small>Versión de pruebas: los indicadores no sustituyen una conciliación física de inventario. La aplicación
+                aún requiere autenticación, autorización y pruebas integrales antes de uso empresarial.</small></p>
+    </main>
+    <script src="js/reportes-v5.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mapa de Bodega</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="mapa">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Mapa de Bodega</h1>
+            <p>Selecciona una bodega para ver sus ubicaciones</p>
+        </div>
+    </header>
+    <main>
+        <div class="barra-superior">
+
+        </div>
+        <section class="buscador-mapa">
+            <h2>Buscar producto</h2>
+            <div class="contenedor-busqueda">
+                <input id="buscarProducto" placeholder="Código de producto o número de serie" type="text" />
+                <button id="botonBuscarProducto" type="button">
+                    Buscar
+                </button>
+                <button id="botonEscanear" type="button">
+                    📷 Escanear
+                </button>
+            </div>
+            <p id="resultadoBusqueda"></p>
+        </section>
+        <section class="selector-bodegas">
+            <h2>Bodegas</h2>
+            <div class="contenedor-bodegas">
+                <button class="boton-bodega" data-bodega="1">
+                    Bodega 1
+                </button>
+                <button class="boton-bodega" data-bodega="2">
+                    Bodega 2
+                </button>
+                <button class="boton-bodega" data-bodega="3">
+                    Bodega 3
+                </button>
+            </div>
+        </section>
+        <section class="mapa-bodega">
+            <h2 id="tituloBodegaMapa">
+                Bodega 1
+            </h2>
+            <div class="leyenda">
+                <span>
+                    🟢 Disponible
+                </span>
+                <span>
+                    🔵 Ocupada
+                </span>
+                <span>
+                    🟠 Por completar
+                </span>
+            </div>
+            <div class="pasillos" id="contenedorPasillos">
+                <div class="pasillo">
+                    <h3>Pasillo 1</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion disponible">
+                            B1-P01-U01
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P01-U02
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P01-U03
+                        </div>
+                    </div>
+                </div>
+                <div class="pasillo">
+                    <h3>Pasillo 2</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion ocupada">
+                            B1-P02-U01
+                        </div>
+                        <div class="ubicacion disponible">
+                            B1-P02-U02
+                        </div>
+                        <div class="ubicacion parcial">
+                            B1-P02-U03
+                        </div>
+                    </div>
+                </div>
+                <div class="pasillo">
+                    <h3>Pasillo 3</h3>
+                    <div class="ubicaciones">
+                        <div class="ubicacion disponible">
+                            B1-P03-U01
+                        </div>
+                        <div class="ubicacion ocupada">
+                            B1-P03-U02
+                        </div>
+                        <div class="ubicacion disponible">
+                            B1-P03-U03
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- =========================
+         MODAL UBICACIÓN
+    ========================= -->
+    <div class="modal-ubicacion" id="modalUbicacion">
+        <div class="contenido-modal">
+            <button class="cerrar-modal" id="cerrarModal">
+                ×
+            </button>
+            <h2 id="tituloUbicacion">
+                Ubicación
+            </h2>
+            <div class="detalle-producto">
+                <div class="foto-producto">
+                    <span>📦</span>
+                </div>
+                <div class="info-producto">
+                    <p>
+                        <strong>Producto:</strong>
+                        Sin producto asignado
+                    </p>
+                    <p>
+                        <strong>Código:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>Tipo de control:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>N° Serie:</strong>
+                        -
+                    </p>
+                    <p>
+                        <strong>Cantidad:</strong>
+                        -
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- =========================
+         MODAL ESCÁNER
+    ========================= -->
+    <div class="modal-ubicacion" id="modalEscaner">
+        <div class="contenido-modal">
+            <button class="cerrar-modal" id="cerrarEscaner" type="button">
+                ×
+            </button>
+            <h2>
+                Escanear código
+            </h2>
+            <p>
+                Apunta la cámara al código del producto.
+            </p>
+            <div id="lectorCodigo" class="ap-inline-1"></div>
+            <p id="mensajeEscaner" class="ap-inline-2"></p>
+        </div>
+    </div>
+    <!-- Librería para escanear códigos -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
+    </script>
+    <script src="js/mapa.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

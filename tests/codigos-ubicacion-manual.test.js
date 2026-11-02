@@ -1,0 +1,14 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const source = fs.readFileSync(require('node:path').join(__dirname, '../server.js'), 'utf8');
+const start = source.indexOf('const parseCodigoUbicacion = (value) => {');
+assert.ok(start >= 0);
+const end = source.indexOf('\n        };', start);
+assert.ok(end > start);
+const parse = vm.runInNewContext('(()=>{' + source.slice(start, end + 11) + ';return parseCodigoUbicacion})()');
+assert.equal(parse('B1-P01-U01').codigo, 'B1-P01-U01');
+assert.equal(parse('b2-p3-u7').codigo, 'B2-P03-U07');
+assert.equal(parse('B1-P02-U54').codigo, 'B1-P02-U54');
+for (const bad of ['B0-P01-U01','B1-P0-U01','B1-P01-U0','B1-PXX-U01','B1-P01-U01 extra']) assert.equal(parse(bad), null);
+console.log('OK: códigos manuales y validación de entradas');

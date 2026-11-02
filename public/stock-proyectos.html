@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Stock por proyecto</title>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="stock-proyectos" class="stock-project-page ap-stock">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Stock por proyecto</h1>
+            <p class="ap-stock-lead">Control de reservas, disponibilidad y conciliación de inventario</p>
+        </div>
+    </header>
+    <main>
+        <section class="ap-stock-overview" aria-label="Resumen de inventario por proyecto">
+            <div class="ap-stock-metric"><span>Stock físico</span><strong id="kpi-fisico">—</strong><small>Unidades registradas</small></div>
+            <div class="ap-stock-metric"><span>Reservado</span><strong id="kpi-asignado">—</strong><small>Asignado a proyectos</small></div>
+            <div class="ap-stock-metric"><span>Stock libre</span><strong id="kpi-libre">—</strong><small>Disponible sin reserva</small></div>
+            <div class="ap-stock-metric"><span>Alertas</span><strong id="kpi-alertas">—</strong><small>Registros por revisar</small></div>
+        </section>
+        <div class="ap-stock-toolbar"><label for="filtro-stock">Buscar en existencias y conciliación <input id="filtro-stock" type="search" placeholder="Producto, proyecto o ubicación" autocomplete="off" /></label><button type="button" id="actualizar-stock">Actualizar datos</button><span id="stock-actualizado" role="status" aria-live="polite"></span></div>
+        <nav aria-label="Secciones de stock" class="ap-subnav"><a href="#asignar">Asignar stock</a><a
+                href="#transferir">Transferir</a><a href="#saldos">Existencias</a><a
+                href="#conciliacion">Conciliación</a><a href="#historial">Historial</a></nav>
+        <section class="project-card">
+            <h2>Asignar stock existente a un proyecto</h2>
+            <p>Esta acción no crea stock físico: reserva para un proyecto parte del inventario existente.</p>
+            <form id="asignar"><label>Proyecto <select class="proyectos" name="proyecto_id"
+                        required=""></select></label><label>Producto de cantidad <select class="productos"
+                        name="producto_id" required=""></select></label><label>Ubicación <select class="ubicaciones"
+                        name="ubicacion_id" required=""></select></label><label>Cantidad <input min="0.001"
+                        name="cantidad" required="" step="any" type="number" /></label><button>Asignar</button></form>
+        </section>
+        <section class="project-card">
+            <h2>Transferir entre proyectos</h2>
+            <form id="transferir"><label>Origen <select class="proyectos" name="proyecto_origen_id"
+                        required=""></select></label><label>Destino <select class="proyectos" name="proyecto_destino_id"
+                        required=""></select></label><label>Producto <select class="productos" name="producto_id"
+                        required=""></select></label><label>Ubicación <select class="ubicaciones" name="ubicacion_id"
+                        required=""></select></label><label>Cantidad <input min="0.001" name="cantidad" required=""
+                        step="any" type="number" /></label><label>Motivo <input maxlength="500" name="motivo"
+                        required="" /></label><button>Transferir</button></form>
+        </section>
+        <p aria-live="polite" id="mensaje" role="status"></p>
+        <section class="project-card">
+            <h2>Existencias asignadas</h2>
+            <div class="ap-inline-1 ap-stock-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Producto</th>
+                            <th>Ubicación</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="saldos"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="project-card">
+            <h2>Conciliación de inventario</h2>
+            <p>Compara existencias físicas, asignadas a proyectos y saldo sin asignar.</p>
+            <div class="ap-inline-2 ap-stock-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Ubicación</th>
+                            <th>Físico</th>
+                            <th>Asignado</th>
+                            <th>Sin asignar</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conciliacion"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="project-card">
+            <h2>Últimas transferencias</h2>
+            <div class="ap-inline-3 ap-stock-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historial"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="js/stock-proyectos.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="js/validacion-movil.js?v=1"></script>
+    <script defer src="js/avisos-movil.js?v=1"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

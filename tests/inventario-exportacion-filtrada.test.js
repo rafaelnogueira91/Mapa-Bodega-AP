@@ -1,0 +1,13 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const html = fs.readFileSync('public/productos.html', 'utf8');
+const js = fs.readFileSync('public/js/productos-consulta.js', 'utf8');
+assert.equal((html.match(/id="exportarProductosFiltrados"/g) || []).length, 1, 'Botón único');
+assert.ok(html.indexOf('id="buscarConsultaProductos"') < html.indexOf('<h2>Registrar producto</h2>'), 'Buscador antes del formulario');
+assert.ok(js.includes('productosVisibles = visibles'), 'Exportación utiliza el resultado filtrado');
+assert.ok(js.includes('productosVisibles.map('), 'Exportación respeta orden visible');
+assert.ok(js.includes('URL.createObjectURL'), 'Descarga CSV local');
+assert.ok(js.includes('texto.replace(/"/g'), 'Escapa comillas de CSV');
+assert.ok(js.includes('if (/^[\\s\\u0000-\\u001f]*[=+@-]/.test(texto))'), 'Protección contra fórmulas');
+assert.ok(!js.includes("fetch('/api/productos/exportar'"), 'No crea endpoint ni altera datos');
+console.log('OK: exportación CSV filtrada, botón único, formulario conservado y protección de fórmulas.');

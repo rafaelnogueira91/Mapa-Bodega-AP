@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'..','server.js'),'utf8');
+assert.match(source,/AND ps\.estado = 'Disponible'/);
+assert.match(source,/WHERE id = \? AND estado = 'Disponible' AND ubicacion_id = \?/);
+assert.match(source,/errorActualizar \|\| this\.changes !== 1/);
+assert.match(source,/SELECT id FROM entregas_series_proyecto WHERE serie_id=\? AND fecha_devolucion IS NULL/);
+assert.match(source,/Esta herramienta ya tiene una entrega abierta/);
+console.log('Guardas de entrega duplicada: 5 verificaciones correctas');

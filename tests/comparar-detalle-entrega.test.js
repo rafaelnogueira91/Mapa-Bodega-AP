@@ -1,0 +1,14 @@
+'use strict';
+const assert = require('node:assert/strict');
+const comparar = require('../routes/comparar-detalle-entrega');
+const detalle = [{producto_id: 10, cantidad: 3}, {producto_id: 20, cantidad: 1}];
+const entrega = [{productoId: 10, cantidad: 3}, {productoId: 20, cantidad: 1}];
+assert.equal(comparar(detalle, entrega), null);
+assert.match(comparar(detalle, [{productoId: 10, cantidad: 2}, entrega[1]]), /coincidir/);
+assert.match(comparar(detalle, [{productoId: 10, cantidad: 3}]), /coincidir/);
+assert.match(comparar(detalle, [...entrega, {productoId: 30, cantidad: 1}]), /coincidir/);
+assert.match(comparar([{producto_id: 10, cantidad: -1}], entrega), /incorrectos/);
+assert.match(comparar([{producto_id: 10, cantidad: Number.MAX_SAFE_INTEGER}, {producto_id: 10, cantidad: 1}], entrega), /incorrectos/);
+assert.match(comparar([], entrega), /detalle válido/);
+assert.equal(comparar([{producto_id: 10, cantidad: 1}, {producto_id: 10, cantidad: 2}], [{productoId: 10, cantidad: 3}]), null);
+console.log('8 casos de comparación de detalle aprobados.');

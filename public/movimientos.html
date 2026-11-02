@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Movimientos - Bodega AP
+    </title>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="movimientos" class="mov-layout">
+    <nav aria-label="Secciones de movimientos" class="mov-nav"><a class="mov-link active"
+            href="movimientos.html">Entradas y salidas</a><a class="mov-link"
+            href="operaciones-integrales.html">Traslados y devoluciones</a></nav>
+    <header class="encabezado">
+        <div class="ap-header-identidad">
+            <h1>
+                Movimientos de Bodega
+            </h1>
+            <p>
+                Entradas y salidas de productos
+            </p>
+        </div>
+    </header>
+    <main class="contenedor-principal">
+        <div class="ap-pro-intro"><span class="ap-pro-eyebrow">OPERACIÓN DE BODEGA</span><h2>Control de movimientos</h2><p>Registra entradas y salidas, consulta el historial y revisa la trazabilidad desde un mismo lugar.</p></div>
+        <nav aria-label="Accesos rápidos" class="mov-shortcuts ap-pro-shortcuts"><a href="#registrar-movimiento">Registrar</a><a
+                href="#historial-movimientos">Historial</a><a href="#trazabilidad-movimientos">Trazabilidad</a></nav>
+
+        <section class="tarjeta" id="registrar-movimiento">
+            <h2>
+                Registrar movimiento
+            </h2>
+            <form id="formMovimiento">
+                <div class="campo-formulario">
+                    <label for="tipoMovimiento">
+                        Tipo de movimiento
+                    </label>
+                    <select id="tipoMovimiento" name="tipoMovimiento" required="">
+                        <option value="">
+                            Selecciona
+                        </option>
+                        <option value="ENTRADA">
+                            Entrada
+                        </option>
+                        <option value="SALIDA">
+                            Salida
+                        </option>
+                        <option value="TRASLADO">
+                            Traslado
+                        </option>
+                    </select>
+                </div>
+                <!-- ===============================
+     ENTREGADO A
+================================ -->
+                <div class="campo-formulario ap-ext-movimientos-01" id="campoEntregadoA">
+                    <label for="personalMovimiento">
+                        Entregado a
+                    </label>
+                    <select id="personalMovimiento" name="personalMovimiento">
+                        <option value="">
+                            Selecciona técnico o asistente
+                        </option>
+                    </select>
+                </div>
+                <div class="contenedor-busqueda">
+                    <input id="codigoProducto" name="codigoProducto" placeholder="Digita o escanea el código"
+                        required="" type="text" />
+                    <button class="boton-escanear" id="botonEscanearMovimiento" type="button">
+                        📷 Escanear
+                    </button>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="ubicacionMovimiento">
+                        Ubicación
+                    </label>
+                    <select id="ubicacionMovimiento" name="ubicacion" required="">
+                        <option value="">
+                            Selecciona una ubicación
+                        </option>
+                    </select>
+                </div>
+                <div class="campo-formulario ap-ext-movimientos-02" id="campoUbicacionDestino">
+                    <label for="ubicacionDestino">
+                        Ubicación de destino
+                    </label>
+                    <select id="ubicacionDestino" name="ubicacionDestino">
+                        <option value="">
+                            Selecciona ubicación de destino
+                        </option>
+                    </select>
+                </div>
+                <div class="campo-formulario" id="campoCantidadMovimiento">
+                    <label for="cantidadMovimiento">
+                        Cantidad
+                    </label>
+                    <input id="cantidadMovimiento" min="1" name="cantidad" type="number" />
+                </div>
+                <div class="campo-formulario" id="campoSerieMovimiento">
+                    <label for="numeroSerieMovimiento">
+                        Número de serie
+                    </label>
+                    <div class="contenedor-busqueda">
+                        <select id="numeroSerieMovimiento" name="numeroSerie">
+                            <option value="">
+                                Selecciona una serie
+                            </option>
+                        </select>
+                        <button class="boton-escanear" id="botonEscanearSerie" type="button">
+                            📷 Escanear serie
+                        </button>
+                    </div>
+                </div>
+                <button class="boton-guardar" type="submit">
+                    Registrar movimiento
+                </button>
+            </form>
+        </section>
+        <section class="tarjeta" id="historial-movimientos">
+            <h2>
+                Historial de movimientos
+            </h2>
+            <div class="mov-filtros">
+                <div><label for="filtroTipoHistorial">Tipo de movimiento</label>
+                    <select id="filtroTipoHistorial">
+                        <option value="">Todos</option>
+                        <option value="ENTRADA">Entradas</option>
+                        <option value="SALIDA">Salidas</option>
+                        <option value="TRASLADO">Traslados</option>
+                    </select>
+                </div>
+                <div><label for="filtroTextoHistorial">Buscar producto, ubicación o serie</label>
+                    <input id="filtroTextoHistorial" placeholder="Código, serie, origen o destino" type="search" />
+                </div>
+                <button id="limpiarHistorial" type="button">Limpiar filtros</button>
+                <button id="exportarHistorialCsv" type="button">Exportar historial CSV</button>
+            </div>
+            <p aria-live="polite" id="contadorHistorial" role="status"></p>
+            <div id="listaMovimientos">
+                <p>
+                    Todavía no hay movimientos registrados.
+                </p>
+            </div>
+        </section>
+        <section aria-labelledby="tituloTrazabilidad" class="tarjeta" id="trazabilidad-movimientos">
+            <h2 id="tituloTrazabilidad">Trazabilidad de productos y herramientas</h2>
+            <p>Consulta dónde se encuentra un producto y revisa sus movimientos registrados.</p>
+            <form id="formTrazabilidad" class="ap-ext-movimientos-03">
+                <div class="campo-formulario"><label for="codigoTrazabilidad">Código del producto</label>
+                    <input id="codigoTrazabilidad" maxlength="120" placeholder="Código del producto" required=""
+                        type="text" />
+                </div>
+                <div class="campo-formulario"><label for="serieTrazabilidad">Número de serie (opcional)</label>
+                    <input id="serieTrazabilidad" maxlength="200" placeholder="Filtrar una herramienta" type="text" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="estadoDevolucionTrazabilidad">Estado de entrega</label>
+                    <select id="estadoDevolucionTrazabilidad">
+                        <option value="TODAS">Todas</option>
+                        <option value="PENDIENTE">Pendientes de devolución</option>
+                        <option value="DEVUELTA">Devueltas</option>
+                    </select>
+                </div>
+                <button class="boton-guardar" type="submit">Consultar trazabilidad</button>
+            </form>
+            <p aria-live="polite" id="estadoTrazabilidad" role="status"></p>
+            <div id="resultadoTrazabilidad"></div>
+        </section>
+    </main>
+    <div class="modal-ubicacion ap-ext-movimientos-04" id="modalEscanerMovimiento">
+        <div class="contenido-modal">
+            <button class="cerrar-modal" id="cerrarEscanerMovimiento" type="button">
+                ×
+            </button>
+            <h2>
+                Escanear código
+            </h2>
+            <div id="lectorMovimiento"></div>
+            <form id="formCodigoManualMovimiento" class="ap-inline-1">
+                <label for="codigoManualMovimiento">Ingresar código sin cámara o con lector USB</label>
+                <input autocomplete="off" id="codigoManualMovimiento" placeholder="Código de producto o número de serie"
+                    required="" type="text" />
+                <button class="boton-guardar" type="submit">Usar código</button>
+                <p aria-live="polite" id="mensajeCodigoManualMovimiento" role="status"></p>
+            </form>
+        </div>
+    </div>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <script src="js/movimientos.js"></script>
+    <script src="js/trazabilidad.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="js/validacion-movil.js?v=1"></script>
+    <script defer src="js/avisos-movil.js?v=1"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificaciones · Bodega AP</title>
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="notificaciones-admin">
+
+  <!-- Cabecera utilizada por el menú compartido -->
+  <header class="ap-header-comun">
+    <div class="ap-header-identidad">
+      <h1>Notificaciones</h1>
+      <p>Mapa Bodega AP</p>
+    </div>
+  </header>
+
+  <main>
+
+    <h1>Notificaciones Gmail</h1>
+
+    <p>
+      Solo el administrador puede gestionar destinatarios
+      y enviar mensajes pendientes. Las credenciales Gmail
+      se configuran en el servidor, no en esta página.
+    </p>
+
+    <!-- Registro de destinatarios -->
+    <form id="form">
+      <input
+        id="correo"
+        type="email"
+        placeholder="destinatario@gmail.com"
+        required
+      >
+      <button type="submit">
+        Agregar destinatario
+      </button>
+    </form>
+
+    <!-- Diagnóstico -->
+    <h2>Diagnóstico de envío</h2>
+
+    <p id="diagnostico" role="status">
+      Consultando configuración...
+    </p>
+
+    <!-- Destinatarios -->
+    <h2>Destinatarios</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Correo</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="destinos"></tbody>
+    </table>
+
+    <!-- Cola de eventos -->
+    <h2>Cola de eventos</h2>
+
+    <p id="resumen" role="status">
+      Cargando resumen...
+    </p>
+
+    <button id="enviar" type="button">
+      Enviar pendientes ahora
+    </button>
+
+    <button id="exportar" type="button">
+      Exportar historial CSV
+    </button>
+
+    <p id="estado" role="status"></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Referencia</th>
+          <th>Estado</th>
+          <th>Intentos</th>
+          <th>Próximo intento</th>
+          <th>Último error</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="cola"></tbody>
+    </table>
+
+  </main>
+
+  <!-- Funcionalidades existentes -->
+  <script src="/js/notificaciones-admin.js"></script>
+
+  <script
+    src="/js/cerrar-sesion.js?v=20261017-movil-fix8"
+    defer>
+  </script>
+
+  <!-- Menú único compartido -->
+  <script
+    src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"
+    defer>
+  </script>
+
+</body>
+</html>

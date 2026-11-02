@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Herramientas por proyecto</title>
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="series-proyectos" class="stock-project-page">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Herramientas seriadas por proyecto</h1>
+        </div>
+    </header>
+    <main>
+        <section class="project-card">
+            <h2>Asignar, transferir o liberar</h2>
+            <p>El cambio de proyecto no modifica la ubicación física de la herramienta.</p>
+            <form id="mover"><label>Herramienta / número de serie<select id="serie" name="serie_id"
+                        required=""></select></label><label>Proyecto destino<select id="destino"
+                        name="proyecto_destino_id">
+                        <option value="">Sin proyecto (liberar)</option>
+                    </select></label><label>Motivo<input maxlength="500" name="motivo"
+                        required="" /></label><button>Guardar movimiento</button></form>
+            <p aria-live="polite" id="estado" role="status"></p>
+        </section>
+        <section class="project-card">
+            <h2>Asignaciones vigentes</h2>
+            <div class="ap-inline-1">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serie</th>
+                            <th>Producto</th>
+                            <th>Ubicación</th>
+                            <th>Proyecto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="project-card">
+            <h2>Entregas a trabajadores</h2>
+            <p>Herramientas entregadas y devueltas, con proyecto y trabajador responsable.</p>
+            <div class="ap-ext-series-proyectos-01">
+                <label>Estado de devolución <select id="filtroEntregas">
+                        <option value="TODAS">Todas</option>
+                        <option value="PENDIENTE">Pendientes</option>
+                        <option value="DEVUELTA">Devueltas</option>
+                    </select></label>
+                <label>Nivel de alerta <select id="filtroAlerta">
+                        <option value="TODAS">Todas las alertas</option>
+                        <option value="PRIORITARIA">Prioritaria (30+ días)</option>
+                        <option value="ATENCION">Atención (15 a 29 días)</option>
+                        <option value="NORMAL">Seguimiento normal (menos de 15 días)</option>
+                        <option value="SIN_FECHA">Sin fecha de entrega</option>
+                    </select></label>
+                <label>Buscar serie, proyecto o trabajador <input autocomplete="off" id="buscarEntrega"
+                        placeholder="Buscar entrega" type="search" /></label>
+            </div><button id="exportarPendientesCSV" type="button">Exportar pendientes a CSV</button>
+            <p aria-live="polite" id="estadoExportacion" role="status"></p>
+            <p>El archivo consulta todas las herramientas pendientes desde la base de datos y respeta la búsqueda y el
+                filtro de alerta. No está limitado a las 500 entregas de la pantalla.</p>
+            <div aria-label="Resumen de alertas según los filtros" class="resumen-alertas" id="resumenAlertas"></div>
+            <p aria-live="polite" class="resumen-alertas-descripcion" id="resumenAlertasDescripcion" role="status"></p>
+            <p aria-live="polite" id="contadorEntregas" role="status"></p>
+            <div class="ap-inline-2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serie</th>
+                            <th>Estado</th>
+                            <th>Proyecto</th>
+                            <th>Trabajador responsable</th>
+                            <th>Ubicación de origen</th>
+                            <th>Fecha entrega</th>
+                            <th>Antigüedad</th>
+                            <th>Alerta</th>
+                            <th>Fecha devolución</th>
+                            <th>Ubicación devolución</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entregas"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="project-card">
+            <h2>Pendientes por trabajador y proyecto</h2>
+            <p>Alertas visuales: atención desde 15 días y prioritaria desde 30 días. Son criterios de seguimiento, no
+                fechas de vencimiento contractual.</p>
+            <p>Resumen de las herramientas que aún no registran devolución, según los filtros de estado, alerta y
+                búsqueda. Los registros devueltos no se incluyen.</p>
+            <p aria-live="polite" id="contadorPendientesPorResponsable" role="status"></p>
+            <div class="ap-inline-3">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trabajador responsable</th>
+                            <th>Proyecto</th>
+                            <th>Herramientas pendientes</th>
+                            <th>Pendiente más antiguo</th>
+                            <th>Alerta</th>
+                            <th>Números de serie</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendientesPorResponsable"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="project-card">
+            <h2>Historial</h2>
+            <div class="ap-inline-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Serie</th>
+                            <th>Acción</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Motivo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historial"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="js/series-proyectos.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

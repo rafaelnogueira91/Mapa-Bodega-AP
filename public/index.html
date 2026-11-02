@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mapa Bodega AP — Inicio</title>
+    
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="index" class="ap-inicio">
+    <a class="salto-contenido" href="#contenido">Saltar al contenido</a>
+    <header class="inicio-cabecera">
+        <div class="inicio-marca"><span aria-hidden="true" class="inicio-logotipo">AP</span>
+            <div>
+                <h1>Mapa Bodega AP</h1>
+                <p>Gestión y ubicación de materiales</p>
+            </div>
+        </div>
+
+    </header>
+    <div class="inicio-estructura">
+        <main class="inicio-contenido" id="contenido">
+            <div class="inicio-intro">
+                <div>
+                    <p class="inicio-sobretitulo">PANEL DE CONTROL</p>
+                    <h2>¿Qué deseas gestionar?</h2>
+                    <p>Accede a los módulos de la bodega desde un solo lugar.</p>
+                </div>
+                <label class="inicio-buscador"><span>Buscar módulo</span><input autocomplete="off" id="buscarModulo"
+                        placeholder="Ej.: solicitudes, stock, reportes" type="search" /></label>
+            </div>
+            <section class="ap-panel-resumen" aria-labelledby="tituloResumen">
+                <div class="ap-panel-resumen-encabezado">
+                    <div><p class="inicio-sobretitulo">ESTADO DE LA BODEGA</p><h2 id="tituloResumen">Resumen operativo</h2>
+                        <p id="resumenEstado" role="status" aria-live="polite">Cargando información actualizada…</p></div>
+                    <button type="button" id="actualizarResumen" class="ap-panel-actualizar">↻ Actualizar</button>
+                </div>
+                <div class="ap-panel-indicadores" aria-label="Indicadores de bodega">
+                    <article class="ap-panel-indicador"><span>Productos registrados</span><strong id="kpiProductos">—</strong><a href="productos.html">Ver inventario →</a></article>
+                    <article class="ap-panel-indicador"><span>Solicitudes pendientes</span><strong id="kpiPendientes">—</strong><a href="solicitudes.html">Gestionar solicitudes →</a></article>
+                    <article class="ap-panel-indicador"><span>Unidades en stock (cantidad)</span><strong id="kpiUnidades">—</strong><a href="stock-proyectos.html">Ver asignaciones →</a></article>
+                    <article class="ap-panel-indicador"><span>Movimientos registrados</span><strong id="kpiMovimientos">—</strong><a href="movimientos-unificado.html">Ver movimientos →</a></article>
+                </div>
+                <div class="ap-panel-alertas" id="resumenAlertas" hidden aria-live="polite"></div>
+            </section>
+            <p class="inicio-sin-resultados" hidden="" id="sinModulos">No se encontraron módulos. Prueba con otro
+                término.</p>
+            <div class="modulos" id="listaModulos">
+                <section class="modulo" id="inventario">
+                    <div aria-hidden="true" class="modulo-icono">📦</div>
+                    <h3>Inventario</h3>
+                    <p>Productos y existencias</p>
+                    <ul>
+                        <li><a href="productos.html">Productos y materiales <span aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+                <section class="modulo" id="bodegas">
+                    <div aria-hidden="true" class="modulo-icono">🗺️</div>
+                    <h3>Bodegas</h3>
+                    <p>Espacios y ubicaciones físicas</p>
+                    <ul>
+                        <li><a href="bodegas.html">Gestión de bodegas <span aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+                <section class="modulo" id="movimientos">
+                    <div aria-hidden="true" class="modulo-icono">🔄</div>
+                    <h3>Movimientos</h3>
+                    <p>Entradas, salidas y operaciones</p>
+                    <ul>
+                        <li><a href="movimientos-unificado.html">Gestión de movimientos <span
+                                    aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+                <section class="modulo" id="proyectos">
+                    <div aria-hidden="true" class="modulo-icono">📁</div>
+                    <h3>Proyectos</h3>
+                    <p>Proyectos y materiales asignados</p>
+                    <ul>
+                        <li><a href="proyectos.html">Administrar proyectos <span aria-hidden="true">→</span></a></li>
+                        <li><a href="stock-proyectos.html">Stock por proyecto <span aria-hidden="true">→</span></a></li>
+                        <li><a href="series-proyectos.html">Herramientas seriadas <span aria-hidden="true">→</span></a>
+                        </li>
+                    </ul>
+                </section>
+                <section class="modulo" id="solicitudes">
+                    <div aria-hidden="true" class="modulo-icono">📋</div>
+                    <h3>Solicitudes</h3>
+                    <p>Solicitar y preparar materiales</p>
+                    <ul>
+                        <li><a href="solicitudes.html">Solicitudes y seguimiento <span aria-hidden="true">→</span></a>
+                        </li>
+                    </ul>
+                </section>
+                <section class="modulo" id="personal">
+                    <div aria-hidden="true" class="modulo-icono">👷</div>
+                    <h3>Personal</h3>
+                    <p>Trabajadores y responsables</p>
+                    <ul>
+                        <li><a href="personal.html">Administrar personal <span aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+                <section class="modulo" id="administracion">
+                    <div aria-hidden="true" class="modulo-icono">⚙️</div>
+                    <h3>Administración</h3>
+                    <p>Configuración y notificaciones</p>
+                    <ul>
+                        <li><a href="usuarios.html" id="enlaceUsuarios" hidden>Administrar usuarios <span
+                                    aria-hidden="true">→</span></a></li>
+                        <li><a href="notificaciones-admin.html">Notificaciones (ADMIN) <span
+                                    aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+                <section class="modulo" id="reportes">
+                    <div aria-hidden="true" class="modulo-icono">📊</div>
+                    <h3>Reportes y auditoría</h3>
+                    <p>Indicadores y diferencias de stock</p>
+                    <ul>
+                        <li><a href="reportes-v5.html">Reportes de inventario <span aria-hidden="true">→</span></a></li>
+                        <li><a href="auditoria-inventario.html">Auditoría (ADMIN / BODEGA) <span
+                                    aria-hidden="true">→</span></a></li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script defer="" src="js/inicio-dashboard.js"></script>
+    <script>fetch("/api/auth/me").then(r => r.ok ? r.json() : null).then(u => { if (u?.rol === "ADMIN") document.getElementById("enlaceUsuarios").hidden = false; }).catch(() => { });</script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

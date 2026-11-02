@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Personal - Mapa de Bodega</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="personal" class="ap-page ap-personal">
+    <header class="encabezado">
+        <div>
+            <h1>Personal</h1>
+            <p>
+                Administración de supervisores,
+                técnicos y asistentes
+            </p>
+        </div>
+
+    </header>
+    <main class="contenedor-principal">
+        <div class="personal-herramientas" role="search" aria-label="Buscar personal">
+            <div class="campo-busqueda"><label for="buscarPersonal">Buscar personal</label>
+                <div class="personal-busqueda-input"><input id="buscarPersonal" type="search"
+                        placeholder="Nombre, apellido o RUT" autocomplete="off" /></div>
+            </div>
+            <div class="campo-filtro"><label for="filtrarCargoPersonal">Filtrar por cargo</label><select
+                    id="filtrarCargoPersonal">
+                    <option value="">Todos los cargos</option>
+                    <option value="SUPERVISOR">Supervisores</option>
+                    <option value="TECNICO">Técnicos</option>
+                    <option value="ASISTENTE">Asistentes</option>
+                </select></div>
+            <button id="mostrarRegistroPersonal" type="button" aria-expanded="false"
+                aria-controls="seccionRegistroPersonal">+ Registrar persona</button>
+        </div>
+        <section class="tarjeta-formulario" id="seccionRegistroPersonal" hidden>
+            <h2>Registrar persona</h2>
+            <form id="formPersonal">
+                <div class="campo-formulario">
+                    <label for="nombrePersonal">
+                        Nombre completo
+                    </label>
+                    <input id="nombrePersonal" required="" type="text" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="rutPersonal">
+                        RUT
+                    </label>
+                    <input id="rutPersonal" placeholder="12.345.678-9" required="" type="text" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="cargoPersonal">
+                        Cargo
+                    </label>
+                    <select id="cargoPersonal" required="">
+                        <option value="">
+                            Selecciona un cargo
+                        </option>
+                        <option value="SUPERVISOR">
+                            Supervisor
+                        </option>
+                        <option value="TECNICO">
+                            Técnico
+                        </option>
+                        <option value="ASISTENTE">
+                            Asistente
+                        </option>
+                    </select>
+                </div>
+                <div class="campo-formulario">
+                    <label for="telefonoPersonal">
+                        Teléfono
+                    </label>
+                    <input id="telefonoPersonal" type="text" />
+                </div>
+                <div class="campo-formulario">
+                    <label for="correoPersonal">
+                        Correo electrónico
+                    </label>
+                    <input id="correoPersonal" type="email" />
+                </div>
+                <button class="boton-principal" type="submit">
+                    Registrar persona
+                </button>
+            </form>
+        </section>
+        <section class="tarjeta-formulario personal-directorio">
+            <div class="personal-directorio-cabecera">
+                <h2 id="personalRegistrado">Personal registrado</h2>
+                <p id="contadorPersonal" aria-live="polite"></p>
+            </div>
+            <div id="listaPersonal">
+                <p>
+                    Aún no hay personal registrado.
+                </p>
+            </div>
+        </section>
+    </main>
+    <script src="js/personal.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

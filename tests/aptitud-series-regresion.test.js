@@ -1,0 +1,22 @@
+'use strict';
+// Protege la validación de aptitud en ambas rutas de salida sin tocar la base real.
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const src = fs.readFileSync(require('node:path').join(__dirname, '..', 'server.js'), 'utf8');
+const verifierStart = src.indexOf('function verificarAptitudSerie(serieId, callback)');
+const verifierEnd = src.indexOf('// Resumen de la última inspección', verifierStart);
+assert(verifierStart > -1 && verifierEnd > verifierStart, 'Debe existir el verificador de aptitud');
+const verifier = src.slice(verifierStart, verifierEnd);
+assert.match(verifier, /ultimaRevision\s*===\s*'RECHAZADA'/);
+assert.match(verifier, /ultimaRevision\s*===\s*'OBSERVADA'/);
+assert.match(verifier, /estado\.vencimiento/);
+assert.match(verifier, /callback\(null,\s*'No se puede entregar/);
+assert.doesNotMatch(verifier, /\b(?:UPDATE|DELETE|INSERT)\b/i, 'Verificar aptitud nunca debe alterar inventario');
+const solicitud = src.slice(src.indexOf('function continuarEntregaSerie()'), src.indexOf('function continuarEntregaSerieValidada()'));
+assert.match(solicitud, /verificarAptitudSerie\(serie\.id/);
+assert.match(solicitud, /if \(motivoBloqueo\) return cancelarEntrega\(motivoBloqueo\)/);
+const movimientos = src.slice(src.indexOf("if(tipoMovimiento==='SALIDA' && serie) {"), src.indexOf('app.post(\n            "/api/movimientos"'));
+assert.match(movimientos, /verificarAptitudSerie\(serie\.id/);
+assert.match(movimientos, /if\(motivoBloqueo\) return res\.status\(409\)/);
+assert(movimientos.indexOf('if(motivoBloqueo)') < movimientos.indexOf('next();'), 'No debe continuar si la serie está bloqueada');
+console.log('OK: validaciones de aptitud protegidas en solicitudes y movimientos.');

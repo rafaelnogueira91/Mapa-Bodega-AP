@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Estructuras de bodega V6</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="estructuras-v6">
+    <header>
+        <div class="ap-header-identidad">
+            <h1>Estructuras de bodega · V6</h1>
+            <p>Racks para pallets, estanterías y zonas de piso</p>
+        </div>
+    </header>
+    <main>
+        <div class="panel-v6">
+            <h2>Crear estructura configurable</h2>
+            <p class="aviso-v6">Cada estructura genera posiciones reales en el inventario existente. No elimina
+                ubicaciones anteriores.</p>
+            <form id="formEstructura">
+                <div class="grid-v6">
+                    <div><label>Nombre</label><input id="nombre" maxlength="60" placeholder="RACK-A01" required="" />
+                    </div>
+                    <div><label>Tipo</label><select id="tipo">
+                            <option value="RACK">Rack para pallets</option>
+                            <option value="ESTANTERIA">Estantería</option>
+                            <option value="PISO">Zona de piso</option>
+                        </select></div>
+                    <div><label>Bodega (número)</label><input id="bodega" min="1" required="" type="number" value="1" />
+                    </div>
+                    <div><label>Pasillo (número)</label><input id="pasillo" min="1" required="" type="number"
+                            value="1" /></div>
+                    <div><label>Módulos / columnas</label><input id="modulos" max="30" min="1" required="" type="number"
+                            value="3" /></div>
+                    <div><label>Niveles / filas</label><input id="niveles" max="15" min="1" required="" type="number"
+                            value="3" /></div>
+                    <div><label>Posiciones por módulo</label><input id="posiciones" max="20" min="1" required=""
+                            type="number" value="2" /></div>
+                    <div><label>Capacidad por posición (kg, opcional)</label><input id="capacidad" min="0"
+                            placeholder="Ej. 1000" step="0.01" type="number" /></div>
+                </div>
+                <p class="aviso-v6" id="total"></p>
+                <div class="rack-v6" id="preview"></div><button class="boton-v6" id="guardar">Crear estructura y
+                    posiciones</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </div>
+        <div class="panel-v6">
+            <h2>Estructuras registradas</h2>
+            <div id="listado">Cargando...</div>
+        </div>
+    </main>
+    <script src="js/estructuras-v6.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

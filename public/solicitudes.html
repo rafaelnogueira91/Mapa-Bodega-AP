@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Solicitudes de Bodega</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+
+</head>
+
+<body data-css-page="solicitudes" class="ap-page ap-solicitudes">
+    <header class="encabezado">
+        <div>
+            <h1>Solicitudes de Bodega</h1>
+            <p>
+                Solicitudes de materiales y herramientas
+            </p>
+        </div>
+
+    </header>
+    <main class="contenedor">
+        <!-- ===============================
+             NUEVA SOLICITUD
+        =============================== -->
+        <div class="ap-solicitudes-cabecera"><div><span class="ap-eyebrow">GESTIÓN DE BODEGA</span><h2>Solicitudes de materiales</h2><p>Consulta el estado de las solicitudes y gestiona nuevas entregas desde un solo lugar.</p></div><button type="button" class="ap-accion-nueva" id="abrirNuevaSolicitud">+ Nueva solicitud</button></div>
+        <nav aria-label="Secciones de solicitudes" class="ap-subnav ap-tabs-solicitudes"><button type="button" data-tab-solicitud="registradas" aria-selected="true">Solicitudes registradas</button><button type="button" data-tab-solicitud="nueva" aria-selected="false">Nueva solicitud</button><button type="button" data-tab-solicitud="historial" aria-selected="false">Historial de entregas</button></nav>
+        <section class="tarjeta ap-panel" id="nueva-solicitud" hidden>
+            <h2>Nueva solicitud</h2>
+            <form id="formSolicitud">
+                <!-- SUPERVISOR -->
+                <div class="campo-formulario">
+                    <label for="supervisorSolicitud">
+                        Supervisor
+                    </label>
+                    <select id="supervisorSolicitud" required="">
+                        <option value="">
+                            Selecciona un supervisor
+                        </option>
+                    </select>
+                </div>
+                <div class="campo-formulario">
+                    <label for="personalDestinoSolicitud">
+                        Solicitado para
+                    </label>
+                    <select id="personalDestinoSolicitud" required="">
+                        <option value="">
+                            Selecciona técnico o asistente
+                        </option>
+                    </select>
+                </div>
+                <!-- BUSCAR PRODUCTO -->
+                <div class="campo-formulario">
+                    <label for="buscarProductoSolicitud">
+                        Buscar producto
+                    </label>
+                    <input autocomplete="off" id="buscarProductoSolicitud"
+                        placeholder="Escribe código o nombre del producto..." type="text" />
+                    <div class="resultados-busqueda" id="resultadosProductos"></div>
+                    <!--
+                        Aquí guardaremos internamente
+                        el ID del producto seleccionado
+                    -->
+                    <input id="productoSolicitud" type="hidden" />
+                </div>
+                <!-- CANTIDAD -->
+                <div class="campo-formulario">
+                    <label for="cantidadSolicitud">
+                        Cantidad
+                    </label>
+                    <input id="cantidadSolicitud" min="1" required="" type="number" value="1" />
+                </div>
+                <!-- AGREGAR PRODUCTO -->
+                <button id="botonAgregarProducto" type="button">
+                    Agregar producto
+                </button>
+                <!-- ===============================
+                     PRODUCTOS AGREGADOS
+                =============================== -->
+                <div id="productosSolicitud">
+                    <p>
+                        Todavía no hay productos agregados.
+                    </p>
+                </div>
+                <!-- PROYECTO -->
+                <div class="campo-formulario">
+                    <label for="proyectoSolicitud">Proyecto de la solicitud</label>
+                    <select disabled="" id="proyectoSolicitud" required="">
+                        <option value="">Selecciona un proyecto</option>
+                    </select>
+                    <small aria-live="polite" id="bodegaProyectoSolicitud">Selecciona primero un supervisor.</small>
+                </div>
+                <div class="campo-formulario">
+                    <label for="prioridadSolicitud">Prioridad de atención</label>
+                    <select id="prioridadSolicitud">
+                        <option value="NORMAL">Normal</option>
+                        <option value="ALTA">Alta</option>
+                        <option value="URGENTE">Urgente</option>
+                    </select>
+                </div>
+                <!-- OBSERVACIONES -->
+                <div class="campo-formulario">
+                    <label for="observacionesSolicitud">
+                        Observaciones
+                    </label>
+                    <textarea id="observacionesSolicitud"
+                        placeholder="Ej: Material requerido para trabajo en terreno..." rows="4"></textarea>
+                </div>
+                <!-- CREAR SOLICITUD -->
+                <button type="submit">
+                    Crear solicitud
+                </button>
+                <p aria-live="polite" id="estadoCreacionSolicitud" role="status"></p>
+            </form>
+        </section>
+        <!-- ===============================
+             SOLICITUDES REGISTRADAS
+        =============================== -->
+        <section class="ap-panel ap-registros" id="solicitudes-registradas">
+            <h2 id="tituloListadoSolicitudes">
+                Solicitudes registradas
+            </h2>
+            <div class="ap-historial-herramientas" id="herramientasHistorialEntregas" hidden>
+                <p>Consulta las solicitudes entregadas y descarga el resumen filtrado. Para ver fechas, responsables y movimientos detallados, abre el historial de cada solicitud.</p>
+                <button type="button" id="exportarHistorialEntregas">Exportar entregas visibles (CSV)</button>
+                <button type="button" id="exportarHistorialDetallado">Exportar trazabilidad detallada (CSV)</button>
+                <button type="button" id="imprimirComprobanteEntrega">Comprobante de entrega (imprimir / PDF)</button>
+                <span id="estadoExportacionEntregas" role="status" aria-live="polite"></span>
+            </div>
+            <div aria-label="Resumen de solicitudes" class="indicadores-solicitudes" id="indicadoresSolicitudes">
+                <button aria-pressed="true" class="indicador-solicitud" data-filtro-estado="" type="button">Todas
+                    <strong id="totalSolicitudes">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-estado="PENDIENTE"
+                    type="button">Pendientes <strong id="totalPendientes">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-estado="EN PREPARACIÓN"
+                    type="button">En preparación <strong id="totalPreparacion">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-estado="ENTREGADA"
+                    type="button">Entregadas <strong id="totalEntregadas">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-prioridad="URGENTE"
+                    type="button">Urgentes por atender <strong id="totalUrgentes">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-estado="URGENTE_ATRASADA"
+                    type="button">Urgentes con alerta (+12 h) <strong id="totalUrgentesAtrasadas">0</strong></button>
+                <button aria-pressed="false" class="indicador-solicitud" data-filtro-estado="ATRASADA" type="button">Con
+                    alerta (+48 h) <strong id="totalAtrasadas">0</strong></button>
+            </div>
+            <div class="tarjeta ap-filtros">
+                <label for="filtroEstadoSolicitud">Filtrar por estado</label>
+                <select id="filtroEstadoSolicitud">
+                    <option value="">Todos los estados</option>
+                    <option value="PENDIENTE">Pendientes</option>
+                    <option value="EN PREPARACIÓN">En preparación</option>
+                    <option value="ENTREGADA">Entregadas</option>
+                    <option value="ATRASADA">Con alerta (+48 h)</option>
+                    <option value="URGENTE_ATRASADA">Urgentes con alerta (+12 h)</option>
+                </select>
+                <label for="filtroPrioridadSolicitud">Prioridad</label>
+                <select id="filtroPrioridadSolicitud">
+                    <option value="">Todas</option>
+                    <option value="NORMAL">Normal</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="URGENTE">Urgente</option>
+                </select>
+                <label for="ordenSolicitudes">Orden de atención</label>
+                <select id="ordenSolicitudes">
+                    <option value="prioridad">Prioridad de atención (atrasadas primero)</option>
+                    <option value="recientes">Más recientes primero</option>
+                    <option value="antiguas">Más antiguas primero</option>
+                    <option value="numero">Número de solicitud</option>
+                </select>
+                <label for="buscarSolicitudRegistrada">Buscar solicitud</label>
+                <input autocomplete="off" id="buscarSolicitudRegistrada"
+                    placeholder="Número, supervisor, destinatario o producto" type="search" />
+                <p aria-live="polite" id="contadorSolicitudes" role="status"></p>
+                <p hidden="" id="sinResultadosSolicitudes">No hay solicitudes que coincidan con los filtros.</p>
+            </div>
+            <div class="ap-lista-solicitudes" id="listaSolicitudes">
+                <p>
+                    Todavía no hay solicitudes registradas.
+                </p>
+            </div>
+        </section>
+    </main>
+    <script src="js/solicitudes.js"></script>
+    <script src="js/solicitudes-profesional.js" defer></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

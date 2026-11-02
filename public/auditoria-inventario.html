@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Auditoría de inventario · Bodega AP</title>
+    
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+</head>
+
+<body data-css-page="auditoria-inventario">
+    <header class="ap-header-comun">
+        <div class="ap-header-identidad">
+            <h1>Auditoría de inventario</h1>
+            <p>Mapa Bodega AP</p>
+        </div>
+    </header>
+    <main>
+        <h1>Auditoría de inventario</h1>
+        <p class="muted">Revisa diferencias entre existencias físicas, reservas por proyecto y herramientas seriadas.
+            Esta consulta <strong>no modifica el inventario</strong>.</p>
+        <div class="actions"><button id="actualizar" type="button">Actualizar auditoría</button><button disabled=""
+                id="exportar" type="button">Exportar resultados filtrados CSV</button></div>
+        <section aria-label="Filtros de auditoría" class="filters"><label>Buscar producto o serie<input
+                    autocomplete="off" id="buscar" placeholder="Nombre, código o número de serie"
+                    type="search" /></label><label>Ubicación<input autocomplete="off" id="ubicacion"
+                    placeholder="Código de ubicación" type="search" /></label><label>Tipo de inconsistencia<select
+                    id="tipo">
+                    <option value="TODOS">Todas</option>
+                    <option value="CANTIDAD">Diferencias de cantidad</option>
+                    <option value="SERIE">Problemas con series</option>
+                    <option value="ENTREGA">Entregas de series</option>
+                    <option value="TRAZABILIDAD">Movimientos y estado</option>
+                    <option value="DEVOLUCION">Devoluciones por revisar</option>
+                </select></label><label>Problema de serie<input autocomplete="off" id="problema"
+                    placeholder="Ej.: sin ubicación" type="search" /></label></section>
+        <div class="actions"><button id="limpiar" type="button">Limpiar filtros</button><small aria-live="polite"
+                id="visibles"></small></div>
+        <p aria-live="polite" id="mensaje" role="status">Presiona «Actualizar auditoría» para consultar.</p><small
+            id="fecha"></small>
+        <section aria-label="Resumen de auditoría" class="cards">
+            <div class="card">Diferencias de cantidad<strong id="totalCant">—</strong></div>
+            <div class="card">Problemas con series<strong id="totalSerie">—</strong></div>
+            <div class="card">Entregas inconsistentes<strong id="totalEntrega">—</strong></div>
+            <div class="card">Diferencias de trazabilidad<strong id="totalTraza">—</strong></div>
+            <div class="card">Devoluciones por revisar<strong id="totalDevol">—</strong></div>
+            <div class="card">Total detectado<strong id="total">—</strong></div>
+        </section>
+        <section class="panel">
+            <h2>Diferencias de cantidad</h2>
+            <div class="ap-inline-1">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Ubicación</th>
+                            <th>Stock físico</th>
+                            <th>Reservado</th>
+                            <th>Libre</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cantidades"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Herramientas seriadas</h2>
+            <div class="ap-inline-2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de serie</th>
+                            <th>Estado</th>
+                            <th>Ubicación</th>
+                            <th>Problema detectado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="series"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Inconsistencias en entregas de herramientas</h2>
+            <div class="ap-inline-3">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de serie</th>
+                            <th>ID entrega</th>
+                            <th>Proyecto</th>
+                            <th>Trabajador</th>
+                            <th>Estado</th>
+                            <th>Ubicación</th>
+                            <th>Problema detectado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entregasSeries"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Diferencias entre movimientos y estado de series</h2>
+            <div class="ap-inline-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de serie</th>
+                            <th>Estado</th>
+                            <th>Último movimiento</th>
+                            <th>Origen</th>
+                            <th>Fecha movimiento</th>
+                            <th>Ubicación</th>
+                            <th>Problema detectado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trazabilidadSeries"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Devoluciones históricas por revisar</h2>
+            <p class="muted">Estos casos no son necesariamente errores: una salida manual posterior puede ser válida.
+            </p>
+            <div class="ap-inline-5">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serie</th>
+                            <th>Estado</th>
+                            <th>Última entrega</th>
+                            <th>Proyecto</th>
+                            <th>Trabajador</th>
+                            <th>Fecha devolución</th>
+                            <th>Ubicación</th>
+                            <th>Observación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="devolucionesPorRevisar"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel" hidden="" id="panelHistorial">
+            <h2>Historial de herramienta <button id="cerrarHistorial" type="button">Cerrar</button></h2>
+            <p aria-live="polite" id="estadoHistorial" role="status"></p>
+            <div id="detalleHistorial"></div>
+        </section>
+        <p class="muted" id="limite">La auditoría muestra hasta 500 registros por categoría. Una auditoría sin hallazgos
+            no sustituye un conteo físico.</p>
+    </main>
+    <script defer="" src="/js/auditoria-inventario.js"></script>
+    <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+</body>
+
+</html>

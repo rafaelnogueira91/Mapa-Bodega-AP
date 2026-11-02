@@ -1,0 +1,36 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const source = fs.readFileSync(path.join(__dirname, '../public/js/solicitudes.js'), 'utf8');
+const start = source.indexOf('async function enviarEntregaParcialConReintento(');
+const end = source.indexOf('// Entregas parciales: consultar siempre', start);
+assert(start >= 0 && end > start);
+const enviar = vm.runInNewContext(`(${source.slice(start, end).trim().replace(/^async function /, 'async function ')})`, {TypeError});
+const carga = {personalId: 3, productos: [{productoId: 7, tipoControl:'CANTIDAD', cantidad: 2}]};
+(async () => {
+  const llamadas = [];
+  const respuesta = {ok:true};
+  const recuperada = await enviar('/api/solicitudes/5/entregar-parcial', carga, 'clave-estable-123456', async (url, options) => {
+    llamadas.push({url, options});
+    if (llamadas.length === 1) throw new TypeError('Failed to fetch');
+    return respuesta;
+  });
+  assert.equal(recuperada, respuesta);
+  assert.equal(llamadas.length, 2);
+  assert.deepEqual(llamadas[0], llamadas[1]);
+  assert.equal(llamadas[0].options.headers['Idempotency-Key'], 'clave-estable-123456');
+  assert.equal(JSON.parse(llamadas[0].options.body).productos[0].cantidad, 2);
+  let intentos = 0;
+  const errorHttp = {ok:false,status:409};
+  assert.equal(await enviar('/url', carga, 'clave-estable-123456', async () => {intentos++; return errorHttp;}), errorHttp);
+  assert.equal(intentos, 1, 'No repetir errores HTTP');
+  intentos = 0;
+  await assert.rejects(enviar('/url', carga, 'clave-estable-123456', async () => {intentos++; throw new TypeError('offline');}), TypeError);
+  assert.equal(intentos, 2, 'No hacer reintentos ilimitados');
+  intentos = 0;
+  await assert.rejects(enviar('/url', carga, 'clave-estable-123456', async () => {intentos++; throw new Error('fallo interno');}), /fallo interno/);
+  assert.equal(intentos, 1);
+  console.log('OK: reintento de red con clave y carga idénticas, sin reintentar HTTP ni indefinidamente');
+})().catch(error => {console.error(error);process.exitCode = 1;});
