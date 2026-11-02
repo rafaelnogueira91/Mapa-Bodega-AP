@@ -217,6 +217,9 @@ app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'public', 'js')));
 app.use('/img', express.static(path.join(__dirname, 'public', 'img')));
 
+// Reconocer HTTPS detrás del proxy de Render.
+app.set('trust proxy', 1);
+
 // Inicio protegido: las rutas de login son públicas; el resto requiere sesión.
 const authReady = require('./auth')(app, db);
 app.use((req,res,next)=>authReady.then(()=>next()).catch(next));
