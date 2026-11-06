@@ -39,6 +39,80 @@ module.exports = (app, db) => {
       if (!nombres.has('bodega_numero')) db.run('ALTER TABLE proyectos ADD COLUMN bodega_numero INTEGER');
     });
   });
+  // Relación muchos supervisores -> un proyecto por supervisor.
+  db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS proyecto_supervisores (
+      supervisor_personal_id INTEGER PRIMARY KEY REFERENCES personal(id),
+      proyecto_id INTEGER NOT NULL REFERENCES proyectos(id),
+      fecha_asignacion TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+    )`);
+    // Migración no destructiva de la asignación histórica (si la columna ya existe).
+    db.all('PRAGMA table_info(proyectos)', [], (err, cols) => {
+      if (!err && cols.some(c => c.name === 'supervisor_personal_id'))
+        db.run(`INSERT OR IGNORE INTO proyecto_supervisores (supervisor_personal_id,proyecto_id)
+          SELECT supervisor_personal_id,id FROM proyectos WHERE supervisor_personal_id IS NOT NULL`);
+    });
+  });
+  const withSupervisores = (rows, res) => {
+    db.all('SELECT supervisor_personal_id,proyecto_id FROM proyecto_supervisores', [], (err, asignaciones) => {
+      if(err)return res.status(500).json({error:'Error consultando asignaciones'});
+      res.json(rows.map(p=>({...p,supervisores_ids:asignaciones.filter(a=>a.proyecto_id===p.id).map(a=>a.supervisor_personal_id)})));
+    });
+  };
+  app.put('/api/proyectos/:id/supervisores', (req,res) => {
+    if(req.usuario?.rol!=='ADMIN')return res.status(403).json({error:'Solo Administración puede asignar supervisores'});
+    const id=Number(req.params.id), ids=req.body?.supervisorPersonalIds;
+    if(!Number.isSafeInteger(id)||id<1||!Array.isArray(ids)||ids.length>500||
+       ids.some(x=>!Number.isSafeInteger(x)||x<1)||new Set(ids).size!==ids.length)
+      return res.status(400).json({error:'Lista de supervisores inválida'});
+    db.get('SELECT id FROM proyectos WHERE id=?',[id],(err,proyecto)=>{
+      if(err)return res.status(500).json({error:'Error consultando proyecto'});
+      if(!proyecto)return res.status(404).json({error:'Proyecto no encontrado'});
+      const placeholders=ids.map(()=>'?').join(',');
+      const validar=ids.length?`SELECT id FROM personal WHERE id IN (${placeholders}) AND UPPER(cargo)='SUPERVISOR' AND UPPER(estado)='ACTIVO'`:null;
+      const continuar=()=>{
+        db.all(`SELECT supervisor_personal_id,proyecto_id FROM proyecto_supervisores WHERE supervisor_personal_id IN (${ids.length?placeholders:'NULL'})`,ids,(e,ocupados)=>{
+          if(e)return res.status(500).json({error:'Error verificando asignaciones'});
+          if(ocupados.some(a=>a.proyecto_id!==id))return res.status(409).json({error:'Un supervisor ya está asignado a otro proyecto'});
+          db.serialize(()=>{
+            db.run('BEGIN IMMEDIATE TRANSACTION',e=>{
+              if(e)return res.status(500).json({error:'No se pudo iniciar la transacción'});
+              db.run('DELETE FROM proyecto_supervisores WHERE proyecto_id=?',[id],e2=>{
+                if(e2)return db.run('ROLLBACK',()=>res.status(500).json({error:'No se pudo actualizar asignaciones'}));
+                const agregar=(i)=>{
+                  if(i===ids.length)return db.run('COMMIT',e3=>e3?res.status(500).json({error:'Error confirmando asignaciones'}):res.json({ok:true,proyectoId:id,supervisorPersonalIds:ids}));
+                  db.run('INSERT INTO proyecto_supervisores(supervisor_personal_id,proyecto_id) VALUES (?,?)',[ids[i],id],e4=>{
+                    if(e4)return db.run('ROLLBACK',()=>res.status(e4.code==='SQLITE_CONSTRAINT'?409:500).json({error:'Supervisor asignado a otro proyecto o error de guardado'}));
+                    agregar(i+1);
+                  });
+                };agregar(0);
+              });
+            });
+          });
+        });
+      };
+      if(!validar)return continuar();
+      db.all(validar,ids,(e,personas)=>{
+        if(e)return res.status(500).json({error:'Error validando supervisores'});
+        if(personas.length!==ids.length)return res.status(400).json({error:'Hay supervisores inexistentes o inactivos'});
+        continuar();
+      });
+    });
+  });
+  app.put('/api/proyectos/:id/bodega',(req,res)=>{
+    if(req.usuario?.rol!=='ADMIN')return res.status(403).json({error:'Solo Administración puede asignar bodegas'});
+    const id=Number(req.params.id),bodega=Number(req.body?.bodegaNumero);
+    if(!Number.isSafeInteger(id)||id<1||!Number.isSafeInteger(bodega)||bodega<1)return res.status(400).json({error:'Datos inválidos'});
+    db.get('SELECT 1 FROM ubicaciones WHERE bodega=? LIMIT 1',[bodega],(e,row)=>{
+      if(e)return res.status(500).json({error:'Error verificando bodega'});
+      if(!row)return res.status(400).json({error:'Bodega sin ubicaciones registradas'});
+      db.run('UPDATE proyectos SET bodega_numero=? WHERE id=?',[bodega,id],function(err){
+        if(err)return res.status(500).json({error:'Error asignando bodega'});
+        if(!this.changes)return res.status(404).json({error:'Proyecto no encontrado'});
+        res.json({ok:true});
+      });
+    });
+  });
   // Administración configura la relación proyecto -> supervisor -> bodega.
   app.put('/api/proyectos/:id/asignacion', (req, res) => {
     if (req.usuario?.rol !== 'ADMIN') return res.status(403).json({error:'Solo Administración puede asignar proyectos'});
@@ -75,18 +149,19 @@ module.exports = (app, db) => {
     const rol = String(req.usuario?.rol || '').toUpperCase();
     if (rol === 'SUPERVISOR') {
       return db.all(`SELECT p.* FROM proyectos p
-        JOIN personal s ON s.id = p.supervisor_personal_id
+        JOIN proyecto_supervisores ps ON ps.proyecto_id = p.id
+        JOIN personal s ON s.id = ps.supervisor_personal_id
         WHERE (LOWER(s.correo) = LOWER(?) OR LOWER(s.rut) = LOWER(?))
           AND UPPER(s.estado) = 'ACTIVO'
         ORDER BY p.estado ASC, p.nombre COLLATE NOCASE ASC`,
         [req.usuario.usuario, req.usuario.usuario],
-        (err, rows) => err ? res.status(500).json({error:'Error al consultar proyectos'}) : res.json(rows));
+        (err, rows) => err ? res.status(500).json({error:'Error al consultar proyectos'}) : withSupervisores(rows,res));
     }
     if (!['ADMIN', 'BODEGA', 'CONSULTA'].includes(rol)) {
       return res.status(403).json({error:'Sin permiso para consultar proyectos'});
     }
     db.all('SELECT * FROM proyectos ORDER BY estado ASC, nombre COLLATE NOCASE ASC', [],
-      (err, rows) => err ? res.status(500).json({error:'Error al consultar proyectos'}) : res.json(rows));
+      (err, rows) => err ? res.status(500).json({error:'Error al consultar proyectos'}) : withSupervisores(rows,res));
   });
   app.post('/api/proyectos', (req,res) => {
     const codigo=clean(req.body.codigo).toUpperCase(), nombre=clean(req.body.nombre);

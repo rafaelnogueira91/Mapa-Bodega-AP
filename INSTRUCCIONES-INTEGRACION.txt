@@ -1,0 +1,6 @@
+VERSION INTEGRADA: basada en mapa-bodega-ap-empresarial(9).zip, conservando database/, uploads/, .git y node_modules.
+Incluye recepcion de materiales de etapa 11 en server.js, public/solicitudes.html y public/js/solicitudes-profesional.js.
+Se preservo configuracion trust proxy original.
+Antes de reemplazar tu carpeta actual, realiza un respaldo completo.
+Para ejecutar: npm install y npm start desde la carpeta raiz.
+Verifica el acceso, la entrega y la recepcion en localhost:3000.

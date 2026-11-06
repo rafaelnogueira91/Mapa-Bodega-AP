@@ -787,13 +787,14 @@ app.post(
 
                         // Validar la asignación proyecto -> supervisor -> bodega en el servidor.
                         // No confiar en los selectores enviados desde el navegador.
-                        db.get(`SELECT id, supervisor_personal_id, bodega_numero, estado
-                                FROM proyectos WHERE id=?`, [Number(proyectoId)],
+                        db.get(`SELECT p.id, p.supervisor_personal_id, p.bodega_numero, p.estado,
+                                EXISTS(SELECT 1 FROM proyecto_supervisores ps WHERE ps.proyecto_id=p.id AND ps.supervisor_personal_id=?) AS supervisor_permitido
+                                FROM proyectos p WHERE p.id=?`, [Number(supervisorId),Number(proyectoId)],
                             (errorProyecto, proyectoAsignado) => {
                             if (errorProyecto) return res.status(500).json({mensaje:'Error al validar el proyecto'});
                             if (!proyectoAsignado || proyectoAsignado.estado !== 'ACTIVO')
                                 return res.status(400).json({mensaje:'Proyecto inexistente o inactivo'});
-                            if (Number(proyectoAsignado.supervisor_personal_id) !== Number(supervisorId) ||
+                            if (!proyectoAsignado.supervisor_permitido ||
                                 !Number.isSafeInteger(Number(proyectoAsignado.bodega_numero)) ||
                                 Number(proyectoAsignado.bodega_numero) <= 0)
                                 return res.status(403).json({mensaje:'El proyecto debe estar asignado a este supervisor y tener una bodega vinculada'});
@@ -882,10 +883,11 @@ app.post(
                                     SELECT ?, ?, ?, ?, ?
                                     WHERE EXISTS (SELECT 1 FROM proyectos
                                         WHERE id = ? AND estado = 'ACTIVO'
-                                        AND supervisor_personal_id = ? AND bodega_numero = ?)`,
+                                        AND bodega_numero = ? AND EXISTS
+                                        (SELECT 1 FROM proyecto_supervisores ps WHERE ps.proyecto_id=proyectos.id AND ps.supervisor_personal_id=?))`,
                                     [supervisorId, personalDestinoId, observaciones || null,
                                         Number(proyectoId), prioridad, Number(proyectoId),
-                                        Number(supervisorId), Number(bodegaProyecto)],
+                                        Number(bodegaProyecto), Number(supervisorId)],
                                     function (errorSolicitud) {
                                         if (errorSolicitud) return revertir(errorSolicitud);
                                         if (this.changes !== 1) {
@@ -942,6 +944,53 @@ app.get('/api/solicitudes/:id/historial', (req, res) => {
             if (error) return res.status(500).json({ mensaje: 'Error al consultar el historial.' });
             res.json(filas);
         });
+    });
+});
+
+// Acuse de recepción: no modifica existencias ni reemplaza una firma electrónica.
+// Se registra una sola vez por solicitud entregada y conserva la identidad del operador.
+db.run(`CREATE TABLE IF NOT EXISTS recepciones_solicitudes (
+  solicitud_id INTEGER PRIMARY KEY REFERENCES solicitudes(id),
+  receptor_nombre TEXT NOT NULL,
+  observacion TEXT NOT NULL DEFAULT '',
+  confirmado_por INTEGER NOT NULL REFERENCES usuarios_app(id),
+  fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+)`);
+app.get('/api/solicitudes/:id/recepcion', (req, res) => {
+  const id = Number(req.params.id);
+  if (!/^[1-9]\d*$/.test(req.params.id) || !Number.isSafeInteger(id))
+    return res.status(400).json({ mensaje: 'Solicitud no válida.' });
+  db.get(`SELECT r.solicitud_id AS solicitudId, r.receptor_nombre AS receptorNombre,
+      r.observacion, r.fecha, r.confirmado_por AS confirmadoPor, u.nombre AS operador
+      FROM recepciones_solicitudes r LEFT JOIN usuarios_app u ON u.id=r.confirmado_por
+      WHERE r.solicitud_id=?`, [id], (error, fila) => {
+    if (error) return res.status(500).json({ mensaje: 'No se pudo consultar la recepción.' });
+    res.json({ recepcion: fila || null });
+  });
+});
+app.post('/api/solicitudes/:id/recepcion', (req, res) => {
+  if (!['ADMIN', 'BODEGA'].includes(req.usuario?.rol))
+    return res.status(403).json({ mensaje: 'No tienes permiso para registrar recepciones.' });
+  const id = Number(req.params.id);
+  if (!/^[1-9]\d*$/.test(req.params.id) || !Number.isSafeInteger(id))
+    return res.status(400).json({ mensaje: 'Solicitud no válida.' });
+  const nombre = req.body?.receptorNombre;
+  const observacion = req.body?.observacion ?? '';
+  if (typeof nombre !== 'string' || !nombre.trim() || nombre.trim().length > 120 ||
+      typeof observacion !== 'string' || observacion.length > 500)
+    return res.status(400).json({ mensaje: 'Indica el nombre del receptor (máximo 120 caracteres) y una observación de hasta 500.' });
+  db.run(`INSERT INTO recepciones_solicitudes (solicitud_id, receptor_nombre, observacion, confirmado_por)
+      SELECT id, ?, ?, ? FROM solicitudes WHERE id=? AND estado='ENTREGADA'
+      ON CONFLICT(solicitud_id) DO NOTHING`,
+    [nombre.trim(), observacion.trim(), req.usuario.id, id], function(error) {
+      if (error) return res.status(500).json({ mensaje: 'No se pudo registrar la recepción.' });
+      if (this.changes === 1) return res.status(201).json({ mensaje: 'Recepción registrada correctamente.' });
+      db.get('SELECT estado FROM solicitudes WHERE id=?', [id], (e, fila) => {
+        if (e) return res.status(500).json({ mensaje: 'No se pudo verificar la solicitud.' });
+        if (!fila) return res.status(404).json({ mensaje: 'La solicitud no existe.' });
+        if (fila.estado !== 'ENTREGADA') return res.status(409).json({ mensaje: 'La solicitud aún no está entregada.' });
+        return res.status(409).json({ mensaje: 'Esta solicitud ya tiene una recepción registrada.' });
+      });
     });
 });
 
@@ -2715,6 +2764,34 @@ app.put(
                     return { productoId: f.producto_id, tipoControl: f.tipo_control,
                         total, reservado: serie ? total - libre : Number(f.reservado), libre };
                 }));
+            });
+        });
+
+        // Disponibilidad real para una solicitud: stock libre + reserva del propio proyecto.
+        // Se calcula por ubicación para no utilizar reservas ajenas ni stock de otra bodega.
+        app.get('/api/productos/disponibilidad-proyecto', (req, res) => {
+            const proyecto = Number(req.query.proyecto);
+            if (!Number.isSafeInteger(proyecto) || proyecto <= 0) return res.status(400).json({mensaje:'Proyecto inválido'});
+            db.get('SELECT id,bodega_numero FROM proyectos WHERE id=?',[proyecto],(err,p) => {
+                if (err) return res.status(500).json({mensaje:'Error consultando proyecto'});
+                if (!p || !Number.isSafeInteger(Number(p.bodega_numero)) || Number(p.bodega_numero)<=0)
+                    return res.status(404).json({mensaje:'Proyecto sin bodega vinculada'});
+                db.all(`SELECT sc.producto_id AS productoId,
+                    SUM(sc.cantidad) AS fisico,
+                    SUM(COALESCE(a.total,0)) AS reservado,
+                    SUM(COALESCE(a.propio,0)) AS reservadoPropio,
+                    SUM(MAX(0,sc.cantidad-COALESCE(a.total,0))) AS libre
+                  FROM stock_cantidad sc JOIN ubicaciones u ON u.id=sc.ubicacion_id
+                  LEFT JOIN (SELECT producto_id,ubicacion_id,SUM(cantidad) AS total,
+                      SUM(CASE WHEN proyecto_id=? THEN cantidad ELSE 0 END) AS propio
+                      FROM stock_proyecto GROUP BY producto_id,ubicacion_id) a
+                    ON a.producto_id=sc.producto_id AND a.ubicacion_id=sc.ubicacion_id
+                  WHERE u.bodega=? GROUP BY sc.producto_id`,[proyecto,p.bodega_numero],(error,filas)=>{
+                    if(error)return res.status(500).json({mensaje:'No se pudo consultar disponibilidad del proyecto'});
+                    res.json(filas.map(f=>({productoId:Number(f.productoId),fisico:Number(f.fisico),reservado:Number(f.reservado),
+                        reservadoPropio:Number(f.reservadoPropio),libre:Number(f.libre),
+                        disponible:Number(f.libre)+Number(f.reservadoPropio)})));
+                });
             });
         });
 

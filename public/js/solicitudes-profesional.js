@@ -115,6 +115,49 @@
     }
   });
 
+  // Acuse administrativo de recepción, independiente del descuento de inventario.
+  const botonRecepcion = document.getElementById('registrarRecepcionEntrega');
+  botonRecepcion?.addEventListener('click', async () => {
+    const visibles = Array.from(listado.querySelectorAll('.solicitud-registrada'))
+      .filter(t => !t.hidden && t.dataset.estado === 'ENTREGADA');
+    if (!visibles.length) { if (mensaje) mensaje.textContent = 'No hay entregas visibles.'; return; }
+    const numero = prompt('Número de solicitud entregada:', visibles[0].dataset.solicitudId);
+    if (numero === null) return;
+    const id = numero.trim();
+    if (!visibles.some(t => t.dataset.solicitudId === id)) {
+      if (mensaje) mensaje.textContent = 'Selecciona una solicitud entregada visible.';
+      return;
+    }
+    botonRecepcion.disabled = true;
+    try {
+      const actual = await fetch(`/api/solicitudes/${encodeURIComponent(id)}/recepcion`, { credentials:'same-origin' });
+      if (!actual.ok) throw new Error('No se pudo verificar si ya existe una recepción.');
+      const datos = await actual.json();
+      if (datos.recepcion) {
+        if (mensaje) mensaje.textContent = `Solicitud #${id}: recibida por ${datos.recepcion.receptorNombre} el ${datos.recepcion.fecha}.`;
+        return;
+      }
+      const receptorNombre = prompt('Nombre de la persona que confirma haber recibido los materiales:');
+      if (receptorNombre === null) return;
+      if (!receptorNombre.trim() || receptorNombre.trim().length > 120) {
+        if (mensaje) mensaje.textContent = 'Ingresa un nombre válido de hasta 120 caracteres.';
+        return;
+      }
+      const observacion = prompt('Observación de recepción (opcional, máximo 500 caracteres):', '');
+      if (observacion === null) return;
+      if (observacion.length > 500) { if (mensaje) mensaje.textContent = 'La observación es demasiado larga.'; return; }
+      if (!confirm(`¿Registrar recepción de la solicitud #${id} a nombre de ${receptorNombre.trim()}? Esta confirmación no se puede repetir.`)) return;
+      const respuesta = await fetch(`/api/solicitudes/${encodeURIComponent(id)}/recepcion`, {
+        method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ receptorNombre:receptorNombre.trim(), observacion })
+      });
+      const resultado = await respuesta.json();
+      if (!respuesta.ok) throw new Error(resultado.mensaje || 'No se pudo registrar la recepción.');
+      if (mensaje) mensaje.textContent = `Recepción de solicitud #${id} registrada correctamente.`;
+    } catch (error) { if (mensaje) mensaje.textContent = error.message; }
+    finally { botonRecepcion.disabled = false; }
+  });
+
   // Comprobante imprimible. El documento distingue cantidades solicitadas
   // de entregas parciales registradas: no supone cantidades finales inexistentes.
   const imprimirComprobante = document.getElementById('imprimirComprobanteEntrega');
@@ -173,7 +216,7 @@ th,td{text-align:left;padding:10px;border-bottom:1px solid #d9e0ea}th{background
 .firmas{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:85px}
 .firma{border-top:1px solid #333;text-align:center;padding-top:8px}.nota{font-size:12px;color:#536273;margin-top:15px}
 @media print{body{margin:0;max-width:none}.info{print-color-adjust:exact}}</style></head><body>
-<header><h1>Comprobante de entrega</h1><div class="sub">Mapa Bodega AP Empresarial · Solicitud #${escaparHtml(numero)} · Estado: ENTREGADA</div></header>
+<header><h1>Comprobante de entrega</h1><div class="sub">Mapa Bodega Empresarial · Solicitud #${escaparHtml(numero)} · Estado: ENTREGADA</div></header>
 <h2>Información de la solicitud</h2><div class="grid">
 <div class="info"><strong>Proyecto</strong><div>${escaparHtml(textoCampo(tarjeta, 'Proyecto'))}</div></div>
 <div class="info"><strong>Supervisor</strong><div>${escaparHtml(textoCampo(tarjeta, 'Supervisor'))}</div></div>

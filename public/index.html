@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Mapa Bodega AP — Inicio</title>
+    <title>Mapa Bodega — Inicio</title>
     
     
     
@@ -13,7 +13,7 @@
     
     
     
-<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
+<link rel="stylesheet" href="css/styles.css?v=20261106-etapa16" />
 </head>
 
 <body data-css-page="index" class="ap-inicio">
@@ -21,7 +21,7 @@
     <header class="inicio-cabecera">
         <div class="inicio-marca"><span aria-hidden="true" class="inicio-logotipo">AP</span>
             <div>
-                <h1>Mapa Bodega AP</h1>
+                <h1>Mapa Bodega</h1>
                 <p>Gestión y ubicación de materiales</p>
             </div>
         </div>
@@ -111,7 +111,7 @@
                 <section class="modulo" id="administracion">
                     <div aria-hidden="true" class="modulo-icono">⚙️</div>
                     <h3>Administración</h3>
-                    <p>Configuración y notificaciones</p>
+                    <p>Usuarios y notificaciones</p>
                     <ul>
                         <li><a href="usuarios.html" id="enlaceUsuarios" hidden>Administrar usuarios <span
                                     aria-hidden="true">→</span></a></li>
@@ -135,7 +135,7 @@
     <script defer="" src="js/inicio-dashboard.js"></script>
     <script>fetch("/api/auth/me").then(r => r.ok ? r.json() : null).then(u => { if (u?.rol === "ADMIN") document.getElementById("enlaceUsuarios").hidden = false; }).catch(() => { });</script>
     <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
-    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261106-etapa16"></script>
 </body>
 
 </html>

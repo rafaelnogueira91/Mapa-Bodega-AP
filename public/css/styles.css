@@ -411,3 +411,95 @@ body[data-css-page="stock-proyectos"] .ap-stock-table-wrap table{min-width:620px
 .ap-solicitudes #exportarHistorialEntregas:focus-visible{outline:3px solid #f0b64b;outline-offset:2px}
 .ap-solicitudes #estadoExportacionEntregas{font-size:.9rem;color:#315c50}
 @media(max-width:640px){.ap-solicitudes #exportarHistorialEntregas{width:100%}}
+
+/* Etapa 15: navegación de escritorio y notebook; tablet y móvil usan menú desplegable. */
+@media (min-width:1025px) and (max-width:1350px){
+ html body > #ap-menu-principal{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:7px!important;padding:8px 12px!important;justify-content:space-between!important}
+ html body #ap-menu-principal .ap-menu-brand{flex:0 0 auto!important;min-width:0!important;order:0!important;gap:5px!important}
+ html body #ap-menu-principal .ap-menu-mark{width:28px!important;height:28px!important;flex-basis:28px!important;font-size:16px!important}
+ html body #ap-menu-principal .ap-menu-brand-copy strong{font-size:12px!important}
+ html body #ap-menu-principal .ap-menu-brand-copy small{display:none!important}
+ html body #ap-menu-principal .ap-menu-toggle{display:none!important}
+ html body #ap-menu-principal #ap-menu-enlaces{display:flex!important;visibility:visible!important;position:static!important;order:1!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-evenly!important;gap:0!important;overflow:visible!important;padding:0!important;border:0!important;background:transparent!important}
+ html body #ap-menu-principal #ap-menu-enlaces .ap-menu-link{display:flex!important;flex:0 1 auto!important;width:auto!important;min-width:0!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:5px 3px!important;min-height:45px!important;font-size:clamp(9px,.85vw,12px)!important;white-space:nowrap!important}
+ html body #ap-menu-principal .ap-menu-icon{font-size:15px!important;width:auto!important}
+ html body #ap-menu-principal .ap-menu-account{order:2!important;flex:0 0 auto!important;gap:3px!important}
+ html body #ap-menu-principal .ap-menu-profile-info{display:none!important}
+ html body #ap-menu-principal .ap-acciones-sesion button{min-width:32px!important;width:32px!important;height:32px!important;min-height:32px!important;flex-basis:32px!important}
+}
+/* Solicitudes: cabecera visual coherente con Proyectos. */
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 28px;margin:0 0 18px;background:linear-gradient(120deg,#12345c,#215a92);border-radius:18px;color:#fff;box-shadow:0 8px 22px rgba(18,52,92,.10)}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-eyebrow{color:#a9d5ff;font-size:.72rem;font-weight:800;letter-spacing:.12em}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera h2{color:#fff;font-size:clamp(1.25rem,2.2vw,1.75rem);margin:6px 0 8px}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera p{color:#d9e9fa;max-width:650px;margin:0}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-accion-nueva{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;background:#fff;color:#173e69;border:0;border-radius:10px;padding:12px 18px;font-weight:750;min-height:44px;box-shadow:none}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-accion-nueva:hover{background:#eaf3ff;color:#173e69}
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-accion-nueva:focus-visible{outline:3px solid #f5c65e;outline-offset:3px}
+@media(max-width:700px){body[data-css-page="solicitudes"] .ap-solicitudes-cabecera{padding:20px;align-items:stretch;flex-direction:column}body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-accion-nueva{width:100%}}
+
+/* Etapa 16: identidad visual consistente entre módulos; sin cambios en lógica de negocio. */
+.ap-etapa16-hero,
+body[data-css-page="productos"] .ap-productos-hero,
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera,
+body[data-css-page="reportes-v5"] .ap-pro-report-tools,
+.ap-pro-report-tools {
+  display:flex!important;justify-content:space-between!important;align-items:center!important;
+  gap:22px!important;padding:26px 28px!important;
+  background:linear-gradient(120deg,#12345c,#215a92)!important;
+  color:#fff!important;border:0!important;border-radius:18px!important;
+  box-shadow:0 8px 24px rgba(18,43,77,.11)!important;margin:0 0 20px!important;
+  text-align:left!important;
+}
+.ap-etapa16-hero h1,.ap-etapa16-hero h2,
+body[data-css-page="productos"] .ap-productos-hero h2,
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera h2,
+.ap-pro-report-tools h2 {color:#fff!important;font-size:clamp(1.35rem,2.3vw,1.85rem)!important;margin:6px 0 8px!important;text-align:left!important}
+.ap-etapa16-hero p,
+body[data-css-page="productos"] .ap-productos-hero p,
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera p,
+.ap-pro-report-tools p {color:#d9e9fa!important;margin:0!important;max-width:700px!important;text-align:left!important}
+.ap-etapa16-eyebrow {color:#d5e5ff!important;font-size:12px;font-weight:800;letter-spacing:.1em}
+body[data-css-page="productos"] .ap-productos-hero button,
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera button {background:#fff!important;color:#12345c!important;border:0!important;border-radius:11px!important;padding:12px 18px!important;font-weight:700!important;white-space:nowrap!important}
+body[data-css-page="usuarios"] main > section:not(.ap-etapa16-hero),
+body[data-css-page="usuarios"] main > section:not(.ap-etapa16-hero) {border-radius:16px!important}
+@media(max-width:700px){.ap-etapa16-hero,body[data-css-page="productos"] .ap-productos-hero,body[data-css-page="solicitudes"] .ap-solicitudes-cabecera,.ap-pro-report-tools{flex-direction:column!important;align-items:stretch!important;padding:20px!important}}
+
+/* Etapa 17: navegación compacta en notebooks, sin alterar el menú móvil. */
+@media (min-width:1025px) and (max-width:1350px){
+ html body > #ap-menu-principal{justify-content:space-between!important;gap:8px!important}
+ html body #ap-menu-principal #ap-menu-enlaces{flex:0 1 auto!important;justify-content:center!important;gap:3px!important;margin-left:auto!important;margin-right:auto!important}
+ html body #ap-menu-principal #ap-menu-enlaces .ap-menu-link{flex:0 0 auto!important;padding:5px 5px!important}
+}
+
+/* Etapa 18: contraste accesible de los textos en cabeceras azules. */
+.ap-etapa16-hero :is(.ap-etapa16-eyebrow,.ap-eyebrow,.ap-pro-eyebrow),
+body[data-css-page="productos"] .ap-productos-hero .ap-productos-eyebrow,
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera .ap-eyebrow,
+body[data-css-page="proyectos"] .ap-pro-project-hero .ap-pro-eyebrow,
+.ap-pro-report-tools .ap-pro-eyebrow,
+.ap-pro-report-tools #fechaActualizacion {
+  color:#fff!important;
+  opacity:1!important;
+}
+.ap-etapa16-hero :is(h1,h2,p,small),
+body[data-css-page="productos"] .ap-productos-hero :is(h1,h2,p),
+body[data-css-page="solicitudes"] .ap-solicitudes-cabecera :is(h1,h2,p),
+body[data-css-page="proyectos"] .ap-pro-project-hero :is(h1,h2,p),
+.ap-pro-report-tools :is(h1,h2,p) {color:#fff!important}
+
+/* Notebook: conservar nombre/rol y controles sin afectar el menú de PC ni el móvil. */
+@media (min-width:1025px) and (max-width:1350px){
+ html body > #ap-menu-principal{gap:5px!important;padding:8px 10px!important}
+ html body #ap-menu-principal .ap-menu-brand{flex:0 0 auto!important}
+ html body #ap-menu-principal #ap-menu-enlaces{flex:1 1 auto!important;min-width:0!important;gap:0!important;margin:0 3px!important;justify-content:center!important}
+ html body #ap-menu-principal #ap-menu-enlaces .ap-menu-link{padding:5px 2px!important;min-width:0!important;font-size:clamp(8px,.75vw,10px)!important}
+ html body #ap-menu-principal .ap-menu-account{gap:4px!important;flex:0 0 auto!important}
+ html body #ap-menu-principal .ap-menu-profile{gap:4px!important;min-width:0!important}
+ html body #ap-menu-principal .ap-menu-profile-info{display:flex!important;max-width:85px!important;min-width:0!important}
+ html body #ap-menu-principal .ap-menu-profile-info strong{font-size:10px!important}
+ html body #ap-menu-principal .ap-menu-profile-info small{font-size:9px!important}
+ html body #ap-menu-principal .ap-menu-avatar{width:28px!important;height:28px!important;flex-basis:28px!important}
+ html body #ap-menu-principal .ap-acciones-sesion{gap:3px!important}
+ html body #ap-menu-principal .ap-acciones-sesion button{width:30px!important;min-width:30px!important;flex-basis:30px!important;height:32px!important;min-height:32px!important}
+}

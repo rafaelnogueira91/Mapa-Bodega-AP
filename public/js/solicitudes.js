@@ -59,6 +59,7 @@ const listaSolicitudes =
 let productosDisponibles = [];
 let disponibilidadProductos = new Map();
 let stockPorBodega = new Map();
+let disponibilidadProyecto = new Map();
 let bodegaProyectoSeleccionada = null;
 let consultaStockProyectoVersion = 0;
 let stockProyectoConsultado = false;
@@ -975,8 +976,11 @@ buscarProductoSolicitud.addEventListener(
                         "resultado-producto";
 
                     const stock = disponibilidadProductos.get(Number(producto.id));
-                    const etiquetaStock = stock && stock.libre !== null
-                        ? ` | Libre: ${stock.libre} / Reservado: ${stock.reservado}`
+                    const propio = disponibilidadProyecto.get(Number(producto.id));
+                    const etiquetaStock = propio
+                        ? ` | Disponible para proyecto: ${propio.disponible} (reservado propio: ${propio.reservadoPropio}, libre: ${propio.libre})`
+                        : stock && stock.libre !== null
+                        ? ` | Libre general: ${stock.libre} / Reservado total: ${stock.reservado}`
                         : " | Disponibilidad no consultada";
                     boton.textContent =
                         `${producto.codigo} — ${producto.nombre}${etiquetaStock}`;
@@ -1029,7 +1033,9 @@ function mostrarDetalleSolicitud() {
 
             const stock = disponibilidadProductos.get(Number(item.productoId));
             const libre = stock && stock.libre !== null ? Number(stock.libre) : null;
-            const faltante = libre !== null && item.cantidad > libre;
+            const propio = disponibilidadProyecto.get(Number(item.productoId));
+            const disponible = propio ? Number(propio.disponible) : null;
+            const faltante = disponible !== null && item.cantidad > disponible;
             const bodegas = stockPorBodega.get(Number(item.productoId)) || [];
             const stockBodega = bodegaProyectoSeleccionada === null ? null :
                 bodegas.find(b => Number(b.bodega) === bodegaProyectoSeleccionada);
@@ -1040,7 +1046,7 @@ function mostrarDetalleSolicitud() {
                 : `Bodega ${bodegaProyectoSeleccionada}: ${stockProyectoConsultado ? `${fisicoProyecto} unidades físicas` : "disponibilidad no verificada"}`;
             const advertencia = bodegaProyectoSeleccionada !== null && faltaEnBodega
                 ? `<p role="status" style="color:#a33"><strong>Reposición necesaria en la bodega del proyecto:</strong> ${fisicoProyecto} unidades físicas, solicitadas ${item.cantidad}. La solicitud puede quedar pendiente de reposición.</p>`
-                : (faltante ? `<p role="status" style="color:#a33">Stock libre general insuficiente. Puedes solicitar reposición.</p>` : "");
+                : (faltante ? `<p role="status" style="color:#a33">Disponibilidad insuficiente para este proyecto. Puedes solicitar reposición.</p>` : "");
 
             contenido += `
                 <div class="tarjeta">
@@ -1051,7 +1057,9 @@ function mostrarDetalleSolicitud() {
                         </strong>
                     </p>
 
-                    <p>Stock libre: ${libre === null ? "No consultada" : libre}</p>
+                    <p>Stock libre general: ${libre === null ? "No consultado" : libre}</p>
+                    <p>Reservado para este proyecto: ${propio ? propio.reservadoPropio : "No consultado"}</p>
+                    <p><strong>Disponible para este proyecto: ${disponible === null ? "No consultado" : disponible}</strong></p>
                     <p>Disponibilidad de la bodega del proyecto: ${detalleBodegas}</p>
                     ${advertencia}
 
@@ -2673,7 +2681,7 @@ cargarSolicitudes();
             const seleccionado=selector.value;
             selector.replaceChildren(new Option('Selecciona un proyecto',''));
             const disponibles=proyectos.filter(p=>p.estado==='ACTIVO' &&
-                Number(p.supervisor_personal_id)===supervisor && Number(p.bodega_numero)>0);
+                (p.supervisores_ids||[]).includes(supervisor) && Number(p.bodega_numero)>0);
             disponibles.forEach(p=>selector.add(new Option(`${p.codigo || p.id} — ${p.nombre}`,p.id)));
             selector.disabled=!disponibles.length;
             if(disponibles.some(p=>String(p.id)===seleccionado))selector.value=seleccionado;
@@ -2684,10 +2692,18 @@ cargarSolicitudes();
             // Las existencias pueden variar mientras el supervisor cambia de proyecto.
             // Una consulta fallida no debe mostrar stock antiguo como si fuera actual.
             stockPorBodega = new Map();
+            disponibilidadProyecto = new Map();
             stockProyectoConsultado = false;
             const versionConsulta = ++consultaStockProyectoVersion;
             mostrarDetalleSolicitud();
             if (proyecto) {
+                fetch(`/api/productos/disponibilidad-proyecto?proyecto=${encodeURIComponent(proyecto.id)}`, {cache:'no-store'})
+                    .then(r => {if(!r.ok)throw new Error('Disponibilidad del proyecto no disponible');return r.json();})
+                    .then(filas => {
+                        if(versionConsulta !== consultaStockProyectoVersion)return;
+                        disponibilidadProyecto = new Map(filas.map(f=>[Number(f.productoId),f]));
+                        mostrarDetalleSolicitud();
+                    }).catch(e=>console.warn('Disponibilidad del proyecto no disponible',e));
                 const bodegaConsultada = bodegaProyectoSeleccionada;
                 fetch(`/api/productos/disponibilidad-bodegas?bodega=${encodeURIComponent(bodegaConsultada)}`, {cache:'no-store'})
                     .then(r => { if (!r.ok) throw new Error('Stock no disponible'); return r.json(); })
@@ -2722,6 +2738,7 @@ cargarSolicitudes();
         ++consultaStockProyectoVersion;
         stockProyectoConsultado = false;
         stockPorBodega = new Map();
+        disponibilidadProyecto = new Map();
         mostrarDetalleSolicitud();
     }
 })();

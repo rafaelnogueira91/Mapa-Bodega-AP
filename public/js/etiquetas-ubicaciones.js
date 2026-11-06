@@ -14,7 +14,7 @@
   const ventana=window.open('','_blank');
   if(!ventana){alert('Permite las ventanas emergentes para imprimir etiquetas.');return;}
   const d=ventana.document;
-  d.title='Etiquetas de ubicaciones — Mapa Bodega AP';
+  d.title='Etiquetas de ubicaciones — Mapa Bodega';
   const meta=d.createElement('meta');meta.setAttribute('charset','utf-8');d.head.appendChild(meta);
   const style=d.createElement('style');
   style.textContent=`@page{size:A4;margin:12mm}*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;color:#1e3558}.toolbar{padding:12px;background:#f0f5fc;display:flex;gap:12px;align-items:center}.toolbar button{background:#23458d;color:white;border:0;border-radius:7px;padding:10px 16px;cursor:pointer}.etiquetas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5mm}.etiqueta{border:1px solid #a7bad4;border-radius:5px;min-height:52mm;padding:4mm 3mm;text-align:center;break-inside:avoid;display:flex;flex-direction:column;justify-content:center;gap:3mm}.qr{width:24mm;height:24mm;margin:0 auto}.qr svg{width:100%;height:100%;display:block}.marca{font-size:9pt;letter-spacing:.07em;color:#536987}.codigo{font-size:14pt;font-weight:800;overflow-wrap:anywhere}.detalle{font-size:9pt;color:#506581}@media print{.toolbar{display:none!important}.etiquetas{gap:4mm}}`;

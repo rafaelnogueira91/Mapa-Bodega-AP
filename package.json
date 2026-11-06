@@ -26,7 +26,8 @@
     "test:entrega-http-500": "node tests/entrega-completa-http-500.test.js",
     "test:css": "python scripts/verificar_css_unificado.py",
     "test:recursos": "python scripts/auditar_recursos_html.py",
-    "test:css:http": "node tests/css-http-cache.test.js"
+    "test:css:http": "node tests/css-http-cache.test.js",
+    "test:pr01": "python tests/test_pr01_disponibilidad_regresion.py && npm run test:entregas-seguras"
   },
   "dependencies": {
     "express": "^5.1.0",

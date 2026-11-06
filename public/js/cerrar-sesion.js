@@ -5,7 +5,7 @@
   button.id = 'boton-cerrar-sesion';
   button.type = 'button';
   (button.querySelector('.ap-etiqueta-sesion') || button).textContent = 'Cerrar sesión';
-  button.setAttribute('aria-label', 'Cerrar sesión de Mapa Bodega AP');
+  button.setAttribute('aria-label', 'Cerrar sesión de Mapa Bodega');
   Object.assign(button.style, {
     position: 'static', flexShrink: '0',
     padding: '10px 15px', borderRadius: '9px', border: '1px solid #b9c6d8',

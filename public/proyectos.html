@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>Proyectos - Mapa Bodega AP</title>
+    <title>Proyectos - Mapa Bodega</title>
     
     
     
@@ -15,8 +15,24 @@
     
     
     
-<link rel="stylesheet" href="css/styles.css?v=20261031-fix" />
-</head>
+<link rel="stylesheet" href="css/styles.css?v=20261106-etapa16" />
+<style>
+.supervisor-help{font-size:13px;color:#52647b;margin:4px 0 10px}
+.supervisor-picker{display:grid;gap:10px;margin-bottom:16px}
+.supervisor-picker input{width:100%;box-sizing:border-box}
+.supervisor-results{border:1px solid #d7e1ee;border-radius:9px;max-height:190px;overflow:auto;background:#fff}
+.supervisor-result{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #edf1f6;font-size:14px}
+.supervisor-result:last-child{border-bottom:0}
+.supervisor-result button{background:#1765b5;color:white;border:0;border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.supervisor-result button:disabled{background:#dbe2ea;color:#546071;cursor:default}
+.supervisor-result small{display:block;color:#65758b;margin-top:2px}
+.supervisor-selected-title{display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:8px}
+.supervisor-selected-title span{color:#52647b}
+.supervisor-chips{display:flex;flex-wrap:wrap;gap:7px;min-height:36px}
+.supervisor-chip{display:inline-flex;align-items:center;gap:8px;background:#eaf3ff;border:1px solid #bfd8f8;border-radius:18px;padding:5px 8px 5px 12px;font-size:13px;color:#123e72}
+.supervisor-chip button{background:transparent;border:0;color:#123e72;font-size:18px;line-height:1;cursor:pointer;padding:0 3px}
+.supervisor-empty{color:#68788a;font-size:13px;padding:10px}
+</style></head>
 
 <body data-css-page="proyectos" class="ap-page ap-proyectos">
     <header>
@@ -52,10 +68,17 @@
                         <option>INACTIVO</option>
                     </select>
                     <fieldset id="asignacionProyecto" class="ap-inline-1">
-                        <legend>Asignación del proyecto</legend><label for="supervisorAsignado">Supervisor a
-                            cargo</label><select id="supervisorAsignado">
-                            <option value="">Sin asignar</option>
-                        </select><label for="bodegaAsignada">Bodega vinculada</label><select id="bodegaAsignada">
+                        <legend>Asignación del proyecto</legend>
+                        <label for="buscarSupervisor">Supervisores a cargo</label>
+                        <p class="supervisor-help">Agrega todos los supervisores del proyecto. Cada persona solo puede pertenecer a un proyecto.</p>
+                        <div class="supervisor-picker">
+                            <input id="buscarSupervisor" type="search" autocomplete="off" placeholder="Buscar supervisor por nombre o RUT" aria-controls="resultadosSupervisor" />
+                            <div id="resultadosSupervisor" class="supervisor-results" role="listbox" aria-label="Supervisores disponibles"></div>
+                            <div class="supervisor-selected-title"><strong>Supervisores asignados</strong> <span id="contadorSupervisores">0 seleccionados</span></div>
+                            <div id="supervisoresSeleccionados" class="supervisor-chips" aria-live="polite"></div>
+                            <select id="supervisorAsignado" multiple hidden aria-hidden="true" tabindex="-1"></select>
+                        </div>
+                        <label for="bodegaAsignada">Bodega vinculada</label><select id="bodegaAsignada">
                             <option value="">Sin asignar</option>
                         </select><small>La asignación se guarda al guardar el proyecto. Solo Administración puede
                             modificarla.</small>
@@ -87,11 +110,11 @@
             </section>
         </div>
     </main>
-    <script src="js/proyectos.js"></script>
+    <script src="js/proyectos.js?v=20261104-etapa14"></script>
     <script src="/js/cerrar-sesion.js?v=20261017-movil-fix8" defer></script>
     <script defer src="js/validacion-movil.js?v=1"></script>
     <script defer src="js/avisos-movil.js?v=1"></script>
-    <script defer src="/js/navegacion-modulos.js?v=20261029-mobile-unified-6"></script>
+    <script defer src="/js/navegacion-modulos.js?v=20261106-etapa16"></script>
 </body>
 
 </html>

@@ -13,7 +13,7 @@
     ['Bodegas','bodegas.html','⌂'],['Movimientos','movimientos-unificado.html','⇄'],
     ['Proyectos','proyectos.html','▤'],['Solicitudes','solicitudes.html','▧'],
     ['Personas','personal.html','♟'],['Reportes','reportes-v5.html','▥'],
-    ['Notificaciones','notificaciones-admin.html','♧'],['Configuración','usuarios.html','⚙']
+    ['Notificaciones','notificaciones-admin.html','♧'],['Usuarios','usuarios.html','♙']
   ];
   const aliases = {
     'mapa.html':'bodegas.html','ubicaciones.html':'bodegas.html','estructuras-v6.html':'bodegas.html',
@@ -26,7 +26,7 @@
   header.id = 'ap-menu-principal';
   const brand = document.createElement('a');
   brand.className = 'ap-menu-brand';brand.href='index.html';
-  brand.innerHTML='<span class="ap-menu-mark" aria-hidden="true">▰</span><span class="ap-menu-brand-copy"><strong>Mapa Bodega AP</strong><small>Inventario y Control de Herramientas</small></span>';
+  brand.innerHTML='<span class="ap-menu-mark" aria-hidden="true">▰</span><span class="ap-menu-brand-copy"><strong>Mapa Bodega</strong><small>Inventario y Control de Herramientas</small></span>';
   const toggle = document.createElement('button');
   toggle.type='button';toggle.className='ap-menu-toggle';toggle.setAttribute('aria-label','Abrir menú');
   toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','ap-menu-enlaces');toggle.textContent='☰';toggle.setAttribute('title','Abrir navegación');
@@ -60,7 +60,7 @@
   nav.addEventListener('click',e=>{if(e.target.closest('a'))close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
   document.addEventListener('click',e=>{if(!header.contains(e.target))close();});
-  const desktopQuery=window.matchMedia('(min-width: 1351px)');
+  const desktopQuery=window.matchMedia('(min-width: 1025px)');
   if (desktopQuery.addEventListener) desktopQuery.addEventListener('change',close);
   else if (desktopQuery.addListener) desktopQuery.addListener(close);
   fetch('/api/auth/me',{credentials:'same-origin'}).then(r=>r.ok?r.json():null).then(user=>{
